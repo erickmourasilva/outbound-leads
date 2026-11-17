@@ -1,0 +1,24 @@
+{
+  "name": "outbound-leads",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Projeto pessoal do Erick: outbound e extração de leads, com disparo gradual de mensagens e painel local.",
+  "packageManager": "pnpm@10.34.7",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "portless outbound-leads python3 -m outbound serve",
+    "serve": "python3 -m outbound serve",
+    "db:init": "python3 -m outbound init",
+    "db:seed": "python3 -m outbound seed",
+    "leads:import": "python3 -m outbound import",
+    "leads:export": "python3 -m outbound export",
+    "stats": "python3 -m outbound stats",
+    "test": "python3 -m unittest discover -s tests -v"
+  },
+  "devDependencies": {
+    "portless": "0.13.0"
+  },
+  "author": "Erick Moura"
+}

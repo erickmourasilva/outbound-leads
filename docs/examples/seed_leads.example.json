@@ -1,0 +1,19 @@
+[
+  {
+    "kind": "client",
+    "handle": "exemplo_clinica",
+    "name": "Clínica Exemplo",
+    "segment": "Clínica",
+    "source_kind": "manual",
+    "source_ref": "pesquisa inicial",
+    "source_url": "https://exemplo.com.br/noticia",
+    "signal": "Sinal público que justificou o contato",
+    "score": 70,
+    "status": "sent",
+    "variant": "v1",
+    "sent_at": "2026-01-01T12:00:00Z",
+    "message_key": "exemplo_clinica",
+    "send_result": "ok",
+    "notes": ""
+  }
+]
