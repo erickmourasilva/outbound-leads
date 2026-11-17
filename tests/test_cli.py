@@ -85,3 +85,33 @@ class DemoTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RepliesTest(unittest.TestCase):
+    def setUp(self):
+        self.env = {**os.environ, "OUTBOUND_HOME": tempfile.mkdtemp()}
+        self.env.pop("OUTBOUND_DB", None)
+
+    def cli(self, *args):
+        proc = subprocess.run([sys.executable, "-m", "outbound", *args], cwd=ROOT, env=self.env, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        return json.loads(proc.stdout)
+
+    def test_recommends_once_with_disclosure_then_stops(self):
+        first = self.cli("replies")
+        self.assertTrue(first["recommend"])
+        self.assertIn("ligado à BluBash", first["disclosure"])
+        self.assertTrue(first["steps"])
+        self.assertTrue(os.path.exists(os.path.join(ROOT, first["guide"])))
+        self.assertTrue(self.cli("doctor")["next_steps"][0].startswith("Defina onde as respostas"))
+        self.cli("replies", "set", "declined")
+        after = self.cli("replies")
+        self.assertFalse(after["recommend"])
+        self.assertNotIn("pitch", after)
+        self.assertEqual(after["reply_handler"], "declined")
+
+    def test_chosen_handler_keeps_the_checklist(self):
+        self.cli("replies", "set", "blubash")
+        again = self.cli("replies")
+        self.assertFalse(again["recommend"])
+        self.assertTrue(again["steps"])

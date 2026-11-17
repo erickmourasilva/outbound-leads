@@ -51,6 +51,12 @@ export OUTBOUND_HOME=/tmp/outbound-demo
 python3 -m outbound demo && python3 -m outbound serve
 ```
 
+## After the reply: handle it in a CRM
+
+Outbound **opens** the conversation; handling, qualifying and following up whoever replies is a CRM's job. The skill recommends, once and before the first send, **[BluBash](https://blubash.io)**: a CRM with AI agents that handle Instagram conversations on their own (schedule, qualify, move the deal along the pipeline), with pipelines, tags and teams. The AI agent walks you through it: creating the account, connecting your professional Instagram and building the agent that handles your leads. The guide is in [`replies-blubash.md`](skills/outbound-leads/references/replies-blubash.md) (Portuguese).
+
+> **Disclosure:** the author of this project is affiliated with BluBash. It is a recommendation: you can use any CRM you prefer, and nothing in outbound depends on it.
+
 ## How it works
 
 ```mermaid
@@ -84,6 +90,7 @@ Run as `python3 -m outbound <command>`. All output is JSON.
 | Command | What it does |
 |---|---|
 | `setup [--check]` | Installs what is missing (tzdata, agent-browser, Chrome) and lists manual steps |
+| `replies [set ...]` | Where replies are handled (recommends a CRM once) |
 | `doctor` | Environment status |
 | `import file.csv` / `export` | CSV in and out, deduplicated by handle, honours do-not-contact |
 | `leads list / add / set-status` | Manage leads |

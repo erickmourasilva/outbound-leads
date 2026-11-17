@@ -89,6 +89,7 @@ DEFAULT_SETTINGS = {
     "min_seconds_between": "90",
     "max_seconds_between": "240",
     "timezone": "America/Sao_Paulo",
+    "reply_handler": "",                # who attends replies: blubash | other | declined (set via `replies set`)
 }
 
 
