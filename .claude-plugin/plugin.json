@@ -1,6 +1,6 @@
 {
   "name": "outbound-leads",
-  "description": "Outbound e extração de leads: extrai e segmenta clientes e parceiros de fontes públicas, dispara mensagens diretas aos poucos (com aprovação do operador) e mostra tudo num painel local com previsão.",
+  "description": "Outbound e extração de leads: extrai e segmenta clientes e parceiros de fontes públicas, envia DMs no Instagram aos poucos (com aprovação do operador) e mostra tudo num painel local com previsão.",
   "version": "0.1.0",
   "author": {
     "name": "Erick Moura"

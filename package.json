@@ -2,7 +2,7 @@
   "name": "outbound-leads",
   "version": "0.1.0",
   "private": true,
-  "description": "Outbound e extração de leads: extrai e segmenta clientes e parceiros, dispara mensagens aos poucos e acompanha tudo num painel local.",
+  "description": "Outbound e extração de leads para o Instagram: extrai e segmenta clientes e parceiros, envia DMs aos poucos e acompanha tudo num painel local.",
   "packageManager": "pnpm@10.34.7",
   "engines": {
     "node": ">=18"

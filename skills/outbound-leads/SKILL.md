@@ -1,7 +1,7 @@
 ---
 name: outbound-leads
 description: >-
-  Outbound e extração de leads. Use quando o usuário pedir para extrair leads,
+  Outbound e extração de leads com contato direto pelo Instagram (DM). Use quando o usuário pedir para extrair leads,
   montar lista de prospecção, achar parceiros ou clientes a partir de
   concorrentes (diretórios de parceiros, cases, listas de seguidores),
   segmentar e pontuar leads, disparar mensagens diretas aos poucos (aquecimento
@@ -16,6 +16,8 @@ description: >-
 # outbound-leads
 
 Motor local de outbound: **extrair → segmentar → enviar aos poucos → acompanhar**. As respostas e a conversa de venda ficam no CRM do usuário; aqui só existe a parte ativa.
+
+**Canal: DM do Instagram.** "Fontes públicas" é de onde vêm os leads (diretórios de parceiros, notícias, vagas, mapas e seguidores de concorrentes); o contato é sempre uma mensagem direta no Instagram, enviada pela conta do operador numa janela de navegador visível. Cada lead precisa de um `@` do Instagram verificado.
 
 Os dados ficam em `~/.outbound-leads` (variável `OUTBOUND_HOME`), fora do código. Todo comando abaixo imprime JSON.
 
@@ -46,7 +48,7 @@ Painel ao vivo: rode `python3 -m outbound serve` em segundo plano. Se o `portles
 
 | Etapa | O que fazer | Referência |
 |---|---|---|
-| Extrair | Reunir leads de fontes públicas e gravar em CSV; `import` deduplica e respeita a lista de não contato | `references/extraction.md` |
+| Extrair | Reunir leads de fontes públicas e gravar em CSV; `import` deduplica e respeita a lista de não contato | `references/extraction.md`, `references/instagram-followers.md` |
 | Segmentar | Definir `kind` (client, partner, intel), segmento, sinal público e pontuação | `references/extraction.md` |
 | Mensagens | Redigir modelos curtos, fundamentados no sinal público; **o usuário aprova** | `references/messages.md` |
 | Fila | `leads set-status <@> approved` nos aprovados | – |

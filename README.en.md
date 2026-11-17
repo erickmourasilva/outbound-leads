@@ -1,6 +1,6 @@
 # outbound-leads
 
-**Responsible, human-supervised outbound for the AI-agent era.** Extract and segment leads from public sources, send messages gradually with approval, and follow everything on a live local dashboard.
+**Responsible, human-supervised outbound for the AI-agent era.** Extract and segment leads from public sources, send Instagram DMs gradually with approval, and follow everything on a live local dashboard.
 
 [![CI](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
