@@ -1,6 +1,6 @@
 {
   "name": "outbound-leads",
-  "description": "Ferramentas de outbound e extração de leads do Erick.",
+  "description": "Plugins de outbound e extração de leads.",
   "owner": {
     "name": "Erick Moura"
   },

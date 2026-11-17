@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Projeto pessoal de outbound e extração de leads. Para agentes de IA (Claude Code, Codex etc.): leia `skills/outbound-leads/SKILL.md`, que traz o fluxo completo, os comandos e as regras.
+Outbound e extração de leads. Para agentes de IA (Claude Code, Codex etc.): leia `skills/outbound-leads/SKILL.md`, que traz o fluxo completo, os comandos e as regras.
 
 Início rápido:
 

@@ -1,7 +1,5 @@
 # Plano
 
-Projeto pessoal do Erick de outbound e extração de leads.
-
 ## Objetivo
 
 Extrair antes, segmentar, e só então enviar aos poucos. Acompanhar a lista e os disparos em tempo real e saber a previsão de término.

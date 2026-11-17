@@ -1,6 +1,6 @@
 # outbound-leads
 
-Projeto pessoal do Erick: outbound e extração de leads. Extrai e segmenta leads (clientes, parceiros e inteligência de concorrentes), dispara mensagens diretas aos poucos e mostra tudo num painel local.
+Outbound e extração de leads. Extrai e segmenta leads (clientes, parceiros e inteligência de concorrentes), dispara mensagens diretas aos poucos e mostra tudo num painel local.
 
 Feito para agentes de IA: basta pedir "instale o outbound-leads e comece". O agente lê a skill, prepara o ambiente e conduz o fluxo.
 
