@@ -8,6 +8,8 @@
     "node": ">=22"
   },
   "scripts": {
+    "setup": "./setup.sh",
+    "doctor": "python3 -m outbound doctor",
     "dev": "portless outbound-leads python3 -m outbound serve",
     "serve": "python3 -m outbound serve",
     "db:init": "python3 -m outbound init",

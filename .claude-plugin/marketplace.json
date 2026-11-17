@@ -1,0 +1,14 @@
+{
+  "name": "outbound-leads",
+  "description": "Ferramentas de outbound e extração de leads do Erick.",
+  "owner": {
+    "name": "Erick Moura"
+  },
+  "plugins": [
+    {
+      "name": "outbound-leads",
+      "source": "./",
+      "description": "Extrai e segmenta leads (clientes, parceiros, concorrentes), dispara mensagens diretas aos poucos com aprovação do operador e acompanha tudo num painel local com previsão de término."
+    }
+  ]
+}

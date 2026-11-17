@@ -12,6 +12,7 @@ CRM, funis, caixa de entrada e atendimento. Depois que o contato responde, a con
 
 ## Fases
 
+0. **Agente (feito):** plugin do Claude Code com skill, `AGENTS.md`, `setup.sh`, `doctor` e comandos em JSON, para o agente instalar e usar sozinho.
 1. **Base (feito):** banco SQLite, painel local, previsão, importação e exportação CSV, lista de não contato, testes.
 2. **Extração:** diretórios públicos de parceiros de empresas concorrentes e, depois, listas de seguidores de perfis concorrentes, em ritmo baixo, filtrando só contas comerciais. O @ sempre vem de fonte verificável.
 3. **Segmentação e pontuação:** por tipo (cliente, parceiro, concorrente), segmento e sinal público; fila diária visível no painel.

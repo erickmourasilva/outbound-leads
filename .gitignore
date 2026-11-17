@@ -7,3 +7,4 @@ imports/
 *.db-shm
 __pycache__/
 .env
+.claude/
