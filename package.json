@@ -23,5 +23,21 @@
     "portless": "0.13.0"
   },
   "author": "Erick Moura",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erickmourasilva/outbound-leads.git"
+  },
+  "homepage": "https://github.com/erickmourasilva/outbound-leads",
+  "bugs": {
+    "url": "https://github.com/erickmourasilva/outbound-leads/issues"
+  },
+  "keywords": [
+    "outbound",
+    "lead-generation",
+    "prospecting",
+    "sales",
+    "ai-agents",
+    "claude-code-plugin"
+  ]
 }

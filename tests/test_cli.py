@@ -65,5 +65,23 @@ class CliTest(unittest.TestCase):
         self.run_cli("settings", "nao_existe", "1", expect=2)
 
 
+class DemoTest(unittest.TestCase):
+    def test_demo_fills_only_an_empty_database(self):
+        home = tempfile.mkdtemp()
+        env = {**os.environ, "OUTBOUND_HOME": home}
+        env.pop("OUTBOUND_DB", None)
+
+        def run(*args):
+            return subprocess.run([sys.executable, "-m", "outbound", *args], cwd=ROOT, env=env, capture_output=True, text=True)
+
+        first = run("demo")
+        self.assertEqual(first.returncode, 0, first.stderr)
+        self.assertEqual(json.loads(first.stdout)["created"], 48)
+        stats = json.loads(run("stats").stdout)
+        self.assertEqual(stats["total"], 48)
+        self.assertFalse(stats["paused"])
+        self.assertNotEqual(run("demo").returncode, 0)  # refuses to mix with existing data
+
+
 if __name__ == "__main__":
     unittest.main()

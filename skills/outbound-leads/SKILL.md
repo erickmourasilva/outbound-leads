@@ -7,8 +7,10 @@ description: >-
   segmentar e pontuar leads, disparar mensagens diretas aos poucos (aquecimento
   gradual), acompanhar envios num painel ou ver a previsão da fila. Também para
   "instalar o outbound-leads", "outbound", "prospecção ativa", "disparar DMs",
-  "painel de leads". Mensagens só saem com autorização do operador, com janela
-  de navegador visível e limites diários baixos.
+  "painel de leads". Also for: lead extraction, outbound prospecting, competitor
+  partner directories, gradual message sending, lead dashboard. Mensagens só
+  saem com autorização do operador, com janela de navegador visível e limites
+  diários baixos.
 ---
 
 # outbound-leads

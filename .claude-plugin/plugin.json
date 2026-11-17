@@ -6,5 +6,14 @@
     "name": "Erick Moura"
   },
   "homepage": "https://github.com/erickmourasilva/outbound-leads",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/erickmourasilva/outbound-leads",
+  "keywords": [
+    "outbound",
+    "lead-generation",
+    "prospecting",
+    "sales",
+    "agents",
+    "dashboard"
+  ]
 }

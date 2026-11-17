@@ -1,6 +1,7 @@
 """outbound-leads CLI. Every command prints JSON so an AI agent can read the result.
 
   python3 -m outbound setup [--check]            install what is missing (python deps, agent-browser, Chrome)
+  python3 -m outbound demo                       fill an EMPTY database with fictional leads (screenshots, trying it out)
   python3 -m outbound doctor                     check the environment and say what to fix
   python3 -m outbound init                       create the local database
   python3 -m outbound serve [--port N]           live dashboard on 127.0.0.1
@@ -28,7 +29,7 @@ import sys
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-from . import dashboard, db, schedule, setup_env
+from . import dashboard, db, demo, schedule, setup_env
 
 CSV_FIELDS = ["kind", "segment", "name", "handle", "source_kind", "source_ref", "source_url", "signal",
               "signal_date", "score", "status", "variant", "message_text", "scheduled_at", "sent_at", "notes"]
@@ -57,6 +58,18 @@ def _parse_utc(value: str | None):
 
 
 # ---------------------------------------------------------------- commands
+def cmd_demo(_args) -> int:
+    db.init()
+    with db.connect() as con:
+        existing = con.execute("SELECT COUNT(*) FROM leads").fetchone()[0]
+    if existing:
+        return fail("o banco não está vazio; a demonstração só roda num banco vazio. "
+                    "Use outro diretório: OUTBOUND_HOME=/tmp/outbound-demo python3 -m outbound demo")
+    result = demo.populate()
+    out({"ok": True, **result, "home": db.HOME, "next": "python3 -m outbound serve"})
+    return 0
+
+
 def cmd_setup(args) -> int:
     result = setup_env.run_setup(install=not args.check, with_portless=args.with_portless)
     out(result)
@@ -321,6 +334,7 @@ def cmd_seed(args) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="python3 -m outbound", description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("demo").set_defaults(fn=cmd_demo)
     su = sub.add_parser("setup")
     su.add_argument("--check", action="store_true", help="só verifica, não instala nada")
     su.add_argument("--with-portless", action="store_true", help="instala também pnpm/portless (URL nomeada do painel)")

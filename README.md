@@ -1,87 +1,135 @@
 # outbound-leads
 
-Outbound e extração de leads. Extrai e segmenta leads (clientes, parceiros e inteligência de concorrentes), dispara mensagens diretas aos poucos e mostra tudo num painel local.
+**Responsible, human-supervised outbound for the AI-agent era.** Extract and segment leads from public sources, send messages gradually with approval, and follow everything on a live local dashboard.
 
-Feito para agentes de IA: basta pedir "instale o outbound-leads e comece". O agente lê a skill, prepara o ambiente e conduz o fluxo.
+[![CI](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
+![macOS | Linux | Windows](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)
 
-## Instalar com IA
+> 🇧🇷 [Leia em português](README.pt-BR.md)
 
-**Claude Code** (plugin com skill):
+![Dashboard with fictional demo data](docs/dashboard.png)
+
+*The dashboard, running on fictional demo data.*
+
+## Why
+
+Outbound usually fails in one of two ways: spam blasts that burn your account and your reputation, or spreadsheets nobody keeps up to date. `outbound-leads` is the middle path:
+
+- **Extract first, send later.** Build and segment the list before a single message goes out.
+- **Gradual by design.** Warm-up schedule, daily caps, business hours, spacing between messages, and an automatic stop at the first platform warning.
+- **A human stays in charge.** Nothing is sent without your approval. The browser window is always visible, and you do the login.
+- **Built for AI agents.** Install it as a Claude Code plugin (or point any agent at `AGENTS.md`) and just ask. Every command prints JSON.
+- **Your data stays yours.** One local SQLite file in `~/.outbound-leads`. No cloud, no telemetry.
+
+## Install
+
+**Claude Code (plugin + skill):**
 
 ```
 /plugin marketplace add erickmourasilva/outbound-leads
 /plugin install outbound-leads@outbound-leads
 ```
 
-Depois peça, por exemplo: "use o outbound-leads para extrair parceiros dos concorrentes e montar a fila".
+Then ask: *"use outbound-leads to extract partners from my competitors' directories and build the queue."* The skill runs `setup`, installs what is missing and walks you through the rest.
 
-**Outros agentes (Codex etc.):** clone o repositório e peça para ler `AGENTS.md`, que aponta para `skills/outbound-leads/SKILL.md`.
+**Other agents (Codex, etc.):** clone the repo and ask the agent to read `AGENTS.md`.
 
 **Manual:**
 
 ```bash
 git clone https://github.com/erickmourasilva/outbound-leads && cd outbound-leads
-./setup.sh                  # instala o que falta e cria o banco local (Windows: .\setup.ps1)
-python3 -m outbound serve   # painel em http://127.0.0.1:8787
+./setup.sh                  # installs what is missing (Windows: .\setup.ps1)
+python3 -m outbound serve   # dashboard at http://127.0.0.1:8787
 ```
 
-O `setup` é idempotente e o mesmo comando serve para o agente (`python3 -m outbound setup`; `--check` só verifica).
+Try it without touching real data:
 
-## Compatibilidade
+```bash
+export OUTBOUND_HOME=/tmp/outbound-demo
+python3 -m outbound demo && python3 -m outbound serve
+```
 
-| | Extrair e acompanhar | Enviar mensagens |
-|---|---|---|
-| Requer | Python 3.10+ (biblioteca padrão; `tzdata` no Windows, instalado pelo `setup`) | Node + npm, `agent-browser` e o Chrome dele (o `setup` instala; Node e permissões de administrador são manuais) |
-| macOS, Linux, Windows | testado por CI nos três (Python 3.10, 3.12 e 3.13) | `agent-browser` cobre os três; no Linux pode exigir `sudo agent-browser install --with-deps` |
+## How it works
 
-Opcional: pnpm e `portless` para a URL `https://outbound-leads.localhost` (`pnpm dev`).
+```mermaid
+flowchart LR
+    A[Public sources<br/>directories, news, jobs, maps] --> B[Extract<br/>CSV import, dedupe]
+    B --> C[Segment and score]
+    C --> D{You approve<br/>texts and list}
+    D --> E[Queue]
+    E --> F[Supervised send<br/>warm-up, caps, hours, spacing]
+    F --> G[Replies continue in<br/>your CRM or inbox]
+    B -.-> H[(SQLite)]
+    E -.-> H
+    F -.-> H
+    H --> I[Live dashboard<br/>and forecast]
+```
 
-## Onde ficam os dados
+## Principles
 
-`~/.outbound-leads` (mude com `OUTBOUND_HOME`): banco SQLite, exportações, importações e a sessão do navegador. Nada disso entra no git nem no código.
+1. **Approval first.** No message leaves without explicit authorization.
+2. **Gradual.** Start at 5 per day, add 5 per week, hard ceiling of 30 by default.
+3. **Visible.** The browser is never headless; credentials are never typed by the tool.
+4. **Honest.** No fake typing, no CAPTCHA bypass, no evasion of platform controls.
+5. **Stop on warning.** Any block, alert or "try again later" pauses everything.
+6. **Respect "no".** The do-not-contact list is permanent.
+7. **Public, professional data only.** No personal phone numbers or e-mails, no sensitive traits.
 
-## Comandos (todos imprimem JSON)
+## Commands
 
-| Comando | O que faz |
+Run as `python3 -m outbound <command>`. All output is JSON.
+
+| Command | What it does |
 |---|---|
-| `doctor` | Verifica o ambiente e diz o que corrigir |
-| `import arquivo.csv` / `export` | Entrada e saída em CSV; deduplica por @ e respeita não contato |
-| `leads list / add / set-status` | Gerenciar leads |
-| `next` | Pode enviar agora? Retorna o motivo, o limite do dia e os próximos leads |
-| `record-send <@> ok\|failed\|not_accepting\|blocked` | Registra um envio (`blocked` pausa tudo) |
-| `pause` / `resume` | Chave geral; o envio começa pausado |
-| `settings [chave valor]` | Limites do aquecimento e horários |
-| `dnc <@>` | Não contatar, para sempre |
-| `stats` | Contagens e previsão |
-| `serve` | Painel local com atualização a cada 5 segundos |
+| `setup [--check]` | Installs what is missing (tzdata, agent-browser, Chrome) and lists manual steps |
+| `doctor` | Environment status |
+| `import file.csv` / `export` | CSV in and out, deduplicated by handle, honours do-not-contact |
+| `leads list / add / set-status` | Manage leads |
+| `next` | May I send now? Returns the reason, today's cap and the next leads |
+| `record-send <@> ok\|failed\|not_accepting\|blocked` | Log a send (`blocked` pauses everything) |
+| `pause` / `resume` | Global kill switch. Sending starts **paused** |
+| `settings [key value]` | Warm-up, hours and spacing |
+| `dnc <@>` | Never contact again |
+| `stats` | Counts and forecast |
+| `serve` | Live dashboard |
+| `demo` | Fill an empty database with fictional leads |
 
-Execute como `python3 -m outbound <comando>`. Formato do CSV: `kind,segment,name,handle,source_kind,source_ref,source_url,signal,signal_date,score,status` (`kind` = `client`, `partner` ou `intel`).
+CSV columns: `kind,segment,name,handle,source_kind,source_ref,source_url,signal,signal_date,score,status` (`kind` is `client`, `partner` or `intel`).
 
-## Regras de envio (padrão)
+## Compatibility
 
-- Aquecimento: 5 mensagens por dia na primeira semana, +5 por semana, teto de 30.
-- Horário comercial (9h às 20h, Brasília), dias úteis, 90 a 240 segundos entre envios.
-- Pausa total ao primeiro alerta, bloqueio ou erro da plataforma.
-- Só envia com autorização do operador. A lista de não contato é permanente.
-- Navegador sempre com janela visível; o operador faz o login. O projeto nunca digita senha nem código.
-- Não simula comportamento humano para disfarçar automação e não contorna CAPTCHA nem bloqueios.
+| | Extract and track | Send messages |
+|---|---|---|
+| Needs | Python 3.10+ (stdlib only; `tzdata` on Windows, installed by `setup`) | Node + npm, the `agent-browser` CLI and its Chrome (`setup` installs them) |
+| Platforms | CI on macOS, Linux and Windows (Python 3.10, 3.12, 3.13) | `agent-browser` supports all three; Linux may need `sudo agent-browser install --with-deps` |
 
-## Estrutura
+Optional: pnpm and `portless` for a named dashboard URL (`pnpm dev` → `https://outbound-leads.localhost`).
 
-```
-.claude-plugin/        manifesto do plugin e do marketplace
-skills/outbound-leads/ skill + referências (extração, mensagens, envio)
-outbound/              pacote Python: db, schedule, forecast, dashboard, cli
-sender/                protótipo supervisionado de envio (agent-browser)
-tests/                 testes (unittest)
-docs/                  plano e exemplos
-AGENTS.md  setup.sh    entrada para agentes e setup idempotente
-```
+## Roadmap
 
-## Licença
+- [x] Local store, live dashboard and forecast
+- [x] Claude Code plugin, skill, JSON CLI, cross-platform setup and CI
+- [x] Send scheduler (pause, hours, caps, spacing, auto-pause on block)
+- [ ] Supervised send worker with a daily approval queue
+- [ ] A/B report: reply rate per message variant
+- [ ] More extraction connectors
+- [ ] Dashboard i18n (currently Portuguese)
+- [ ] Optional CRM webhooks for reply and opt-out sync
 
-MIT. Veja `LICENSE`.
+## Responsible use
 
-## Aviso
+Automated messaging may violate a platform's terms of service and can get accounts restricted. Keep volume low, use a dedicated account, honour every opt-out and comply with the law where you operate (for example GDPR or Brazil's LGPD). You are responsible for how you use this tool. See [SECURITY.md](SECURITY.md).
 
-Envio automatizado de mensagens pode violar os termos de uso da plataforma e restringir a conta. Mantenha volume baixo, aumente aos poucos e use uma conta própria para essa operação. Prospecção B2B deve respeitar a LGPD: abordar empresas com base em informação pública e profissional, e atender de imediato qualquer pedido para parar.
+## Contributing
+
+Issues and PRs are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)
+
+---
+
+Created by **[Erick Moura](https://github.com/erickmourasilva)**.
