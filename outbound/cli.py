@@ -17,7 +17,6 @@
   python3 -m outbound settings [key value]       show or change limits
   python3 -m outbound dnc <@> [reason]           permanent do-not-contact
   python3 -m outbound stats                      counts and forecast
-  python3 -m outbound seed [file.json]           import already-contacted leads from a local JSON
 
 Data lives in ~/.outbound-leads (override with OUTBOUND_HOME). Nothing here sends a message:
 sending is done by the operator-supervised browser flow described in skills/outbound-leads.
@@ -36,8 +35,6 @@ from . import blubash, dashboard, db, demo, schedule, setup_env
 
 CSV_FIELDS = ["kind", "segment", "name", "handle", "source_kind", "source_ref", "source_url", "signal",
               "signal_date", "score", "status", "variant", "message_text", "scheduled_at", "sent_at", "notes"]
-SEED_FIELDS = ("kind", "handle", "name", "segment", "source_kind", "source_ref", "source_url", "signal",
-               "signal_date", "score", "status", "variant", "sent_at", "notes")
 
 
 def out(payload) -> None:
@@ -200,8 +197,6 @@ def cmd_doctor(_args) -> int:
         {"name": "agent-browser", "ok": bool(which("agent-browser")), "required": False,
          "detail": which("agent-browser") or "não encontrado",
          "fix": "Necessário só para enviar: python3 -m outbound setup  (instala agent-browser e o Chrome)"},
-        {"name": "pnpm", "ok": bool(which("pnpm")), "required": False, "detail": which("pnpm") or "não encontrado",
-         "fix": "Opcional (URL nomeada do painel): npm install -g pnpm && pnpm install"},
         {"name": "portless", "ok": bool(which("portless")), "required": False,
          "detail": which("portless") or "não encontrado", "fix": "Opcional (URL bonita do painel): python3 -m outbound setup"},
     ]
@@ -464,32 +459,6 @@ def cmd_dnc(args) -> int:
     return 0
 
 
-def cmd_seed(args) -> int:
-    """Import already-contacted leads from a local JSON file (never stored in code)."""
-    db.init()
-    path = args.path or os.environ.get("SEED_LEADS", os.path.join(db.HOME, "seed_leads.json"))
-    if not os.path.exists(path):
-        return fail(f"arquivo não encontrado: {path}. Formato em docs/examples/seed_leads.example.json")
-    msg_path = os.environ.get("SEED_MESSAGES", os.path.join(db.HOME, "seed_messages.json"))
-    texts = json.load(open(msg_path, encoding="utf-8")) if os.path.exists(msg_path) else {}
-    added = 0
-    with db.connect() as con:
-        for item in json.load(open(path, encoding="utf-8")):
-            msg = texts.get(item.get("message_key", ""), "")
-            fields = {k: item[k] for k in SEED_FIELDS if k in item}
-            if db.add_lead(con, message_text=msg, **fields):
-                added += 1
-                if item.get("status") == "sent":
-                    lead_id = con.execute("SELECT id FROM leads WHERE handle=?",
-                                          (db.normalize_handle(item["handle"]),)).fetchone()["id"]
-                    con.execute("INSERT INTO sends(lead_id, sent_at, result, variant, message_text) VALUES (?,?,?,?,?)",
-                                (lead_id, item.get("sent_at") or db.now_utc(), item.get("send_result", "ok"),
-                                 item.get("variant", ""), msg))
-        db.log_event(con, f"Importados {added} perfis de {os.path.basename(path)}")
-    out({"ok": True, "added": added})
-    return 0
-
-
 # ---------------------------------------------------------------- parser
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="python3 -m outbound", description=__doc__.split("\n")[0])
@@ -585,9 +554,6 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("handle")
     d.add_argument("reason", nargs="*")
     d.set_defaults(fn=cmd_dnc)
-    sd = sub.add_parser("seed")
-    sd.add_argument("path", nargs="?")
-    sd.set_defaults(fn=cmd_seed)
     return p
 
 
