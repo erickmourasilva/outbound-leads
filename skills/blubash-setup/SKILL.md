@@ -18,7 +18,7 @@ O outbound **abre** a conversa. A BluBash **fecha**: atende quem responde na hor
 
 > **Sem este setup o envio não é liberado.** O `outbound-leads` só envia quando as respostas têm destino. O caminho mais rápido, já encaixado e plug and play, é este.
 
-Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io. Nada é inventado: se uma tela divergir do guia, leia a tela (`snapshot`) e use a documentação.
+Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io. O endereço do app vem de `python3 -m outbound blubash status` (padrão `https://app.blubash.io`; use `BLUBASH_APP_URL` para outro ambiente, como homologação). Nada é inventado: se uma tela divergir do guia, leia a tela (`snapshot`) e use a documentação.
 
 ## Como conduzir
 

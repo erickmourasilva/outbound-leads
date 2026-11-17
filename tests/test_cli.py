@@ -147,6 +147,14 @@ class RepliesTest(unittest.TestCase):
         self.assertTrue(self.cli("blubash")["ready"])
         self.assertTrue(self.cli("next")["allowed"])
 
+    def test_app_address_can_be_overridden_for_other_environments(self):
+        self.env["BLUBASH_APP_URL"] = "https://staging.example.test/"
+        status = self.cli("blubash", "status")
+        self.assertEqual(status["app"], "https://staging.example.test")
+        self.assertEqual(status["signup"], "https://staging.example.test/auth/register")
+        del self.env["BLUBASH_APP_URL"]
+        self.assertEqual(self.cli("blubash", "status")["app"], "https://app.blubash.io")
+
     def test_done_all_for_accounts_already_configured(self):
         self.cli("blubash", "done", "all")
         status = self.cli("blubash", "status")

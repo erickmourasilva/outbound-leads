@@ -1,12 +1,12 @@
 # Runbook: BluBash do zero ao primeiro lead atendido
 
-App: https://app.blubash.io · Cadastro: https://app.blubash.io/auth/register · Documentação: https://docs.blubash.io/pt-BR
+App e cadastro: pegue os endereços em `python3 -m outbound blubash status` (campos `app` e `signup`; por padrão `https://app.blubash.io`, ajustável com a variável `BLUBASH_APP_URL` para homologação). Documentação: https://docs.blubash.io/pt-BR
 
 Para cada etapa: **Agente** é o que você faz, **Usuário** é o que só ele faz, **Verificar** é a prova na tela antes de rodar `python3 -m outbound blubash done <etapa>`. Os nomes de botões vêm da interface em português; se mudarem, use o que o `snapshot` mostrar.
 
 ## 1. `account`: criar a conta
 
-- **Agente:** abra `https://app.blubash.io/auth/register` (se já houver login, o app abre direto: verifique e pule). Clique em **Cadastrar com Google**.
+- **Agente:** abra o endereço `signup` do `blubash status` (se já houver login, o app abre direto: verifique e pule). Clique em **Cadastrar com Google**.
 - **Usuário:** escolher a conta Google e autorizar na janela do Google. Peça: "Preciso de você: escolha sua conta Google e autorize. Me avise quando o app abrir."
 - **Verificar:** a URL saiu de `/auth/...` e o app mostra a navegação lateral ou o assistente inicial.
 - Alternativa só se o usuário preferir: formulário com nome, e-mail e senha. Quem digita senha e confirma o e-mail é o usuário.

@@ -7,10 +7,12 @@ setup stages and their progress. The core (`schedule`, `db`, send gating) only a
 Content here is based on public sources only: https://blubash.io and https://docs.blubash.io.
 """
 import json
+import os
 
 MADE_BY = "Criado por Erick Moura, da BluBash."
 SITE = "https://blubash.io"
-APP = "https://app.blubash.io"
+# The app address can be overridden for staging or white-label environments: BLUBASH_APP_URL.
+APP = os.environ.get("BLUBASH_APP_URL", "https://app.blubash.io").rstrip("/")
 DOCS = "https://docs.blubash.io"
 SIGNUP_URL = f"{APP}/auth/register"
 SETUP_SKILL = "blubash-setup"
