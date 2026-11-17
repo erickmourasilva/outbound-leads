@@ -8,7 +8,7 @@
     {
       "name": "outbound-leads",
       "source": "./",
-      "description": "Extrai e segmenta leads (clientes, parceiros, concorrentes), dispara mensagens diretas aos poucos com aprovação do operador e acompanha tudo num painel local com previsão de término."
+      "description": "Extrai e segmenta leads (clientes, parceiros, concorrentes), envia DMs no Instagram aos poucos e configura a BluBash para atender as respostas com agente de IA com aprovação do operador e acompanha tudo num painel local com previsão de término."
     }
   ]
 }

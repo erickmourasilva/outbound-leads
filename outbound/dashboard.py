@@ -1,6 +1,6 @@
 """Local live dashboard (read-mostly). Serves on 127.0.0.1 only. Stdlib only.
 
-Run: pnpm dev (https://outbound-leads.localhost via portless) or python3 -m outbound serve
+Run: python3 -m outbound serve (uses https://outbound-leads.localhost via portless when installed)
 """
 import json
 import os

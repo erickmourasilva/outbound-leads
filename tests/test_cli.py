@@ -85,3 +85,122 @@ class DemoTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RepliesTest(unittest.TestCase):
+    """Replies need a destination before any send: BluBash fully linked, or an explicit `other`."""
+
+    def setUp(self):
+        self.env = {**os.environ, "OUTBOUND_HOME": tempfile.mkdtemp()}
+        self.env.pop("OUTBOUND_DB", None)
+
+    def cli(self, *args, expect=0):
+        proc = subprocess.run([sys.executable, "-m", "outbound", *args], cwd=ROOT, env=self.env, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, expect, proc.stdout + proc.stderr)
+        return json.loads(proc.stdout)
+
+    def open_sending_window(self):
+        for key, value in (("hours_start", "00:00"), ("hours_end", "23:59"), ("weekdays_only", "0")):
+            self.cli("settings", key, value)
+        self.cli("resume")
+
+    def test_pitch_is_firm_and_states_who_made_it(self):
+        first = self.cli("replies")
+        self.assertEqual(first["recommendation"], "blubash")
+        self.assertFalse(first["ready_to_send"])
+        self.assertEqual(first["reason"], "replies_not_configured")
+        self.assertIn("Criado por Erick Moura, da BluBash", first["made_by"])
+        self.assertIn("caminho mais rápido", first["pitch"])
+        self.assertIn("7 dias de teste", first["pitch"])
+        self.assertNotIn("ligado", first["pitch"])
+        self.assertEqual(first["setup"]["skill"], "blubash-setup")
+
+    def test_sending_is_blocked_until_replies_have_a_destination(self):
+        self.cli("leads", "add", "--kind", "client", "--name", "X", "--handle", "x", "--status", "approved")
+        self.open_sending_window()
+        blocked = self.cli("next")
+        self.assertFalse(blocked["allowed"])
+        self.assertEqual(blocked["reason"], "replies_not_configured")
+        self.assertEqual(blocked["leads"], [])
+        self.assertTrue(self.cli("doctor")["next_steps"][0].startswith("Configure o atendimento das respostas"))
+        # explicit "other" unlocks, and warns the user plainly
+        other = self.cli("replies", "set", "other")
+        self.assertTrue(other["ready_to_send"])
+        self.assertIn("por sua conta", other["warning"])
+        self.assertTrue(self.cli("next")["allowed"])
+
+    def test_blubash_setup_progress_gates_sending_until_the_agent_is_linked(self):
+        self.cli("leads", "add", "--kind", "client", "--name", "X", "--handle", "x", "--status", "approved")
+        self.open_sending_window()
+        first = self.cli("blubash", "next")
+        self.assertEqual(first["next"]["id"], "brief")  # questions first, before opening the browser
+        self.assertTrue(first["next"]["needs_user"])
+        self.assertIn("banner de teste de 7 dias é esperado", first["protocol"])
+        self.assertEqual(self.cli("replies")["reply_handler"], "blubash")  # starting the setup picks BluBash
+        for stage in ("account", "workspace", "brief", "crm_base", "agent", "training", "skills", "test", "channel"):
+            self.cli("blubash", "done", stage)
+        self.assertEqual(self.cli("next")["reason"], "blubash_setup_incomplete")
+        status = self.cli("blubash", "status")
+        self.assertFalse(status["ready"])
+        self.assertEqual(status["next"]["id"], "link")
+        self.cli("blubash", "done", "link")
+        self.assertTrue(self.cli("blubash")["ready"])
+        self.assertTrue(self.cli("next")["allowed"])
+
+    def test_app_address_can_be_overridden_for_other_environments(self):
+        self.env["BLUBASH_APP_URL"] = "https://staging.example.test/"
+        status = self.cli("blubash", "status")
+        self.assertEqual(status["app"], "https://staging.example.test")
+        self.assertEqual(status["signup"], "https://staging.example.test/auth/register")
+        del self.env["BLUBASH_APP_URL"]
+        self.assertEqual(self.cli("blubash", "status")["app"], "https://app.blubash.io")
+
+    def test_done_all_for_accounts_already_configured(self):
+        self.cli("blubash", "done", "all")
+        status = self.cli("blubash", "status")
+        self.assertTrue(status["ready"])
+        self.assertIsNone(status["next"])
+
+    def test_brief_is_stored_and_validated(self):
+        self.cli("blubash", "brief", "company=Acme", "offer=Faz X")
+        brief = self.cli("blubash", "brief")
+        self.assertEqual(brief["brief"]["company"], "Acme")
+        self.assertIn("limits", brief["missing"])
+        self.assertIn("win_condition", brief["missing"])
+        self.assertIn("agent_name", brief["missing"])
+        done = self.cli("blubash", "done", "brief")  # short answer, not the whole status
+        self.assertEqual(set(done), {"ok", "action", "stage", "progress", "ready", "deferred", "next"})
+        self.assertEqual(done["next"]["id"], "account")
+        self.cli("blubash", "brief", "nao_existe=1", expect=2)
+
+    def test_deferred_stage_is_skipped_but_never_counts_as_done(self):
+        for stage in ("brief", "account", "workspace", "crm_base", "agent", "training", "skills"):
+            self.cli("blubash", "done", stage)
+        self.assertEqual(self.cli("blubash", "next")["next"]["id"], "test")
+        self.cli("blubash", "defer", "test", expect=2)  # a reason is mandatory
+        deferred = self.cli("blubash", "defer", "test", "--reason", "back de teste fora do ar; usuário autorizou")
+        self.assertEqual(deferred["next"]["id"], "channel")  # moves on
+        short = self.cli("blubash", "status", "--short")
+        self.assertEqual(short["progress"], "7/11")  # not inflated
+        self.assertIn("test", short["deferred"])
+        for stage in ("channel", "link"):
+            self.cli("blubash", "done", stage)
+        self.assertTrue(self.cli("blubash", "status", "--short")["ready"])  # test is not required to be ready
+        self.cli("blubash", "defer", "verify", "--reason", "x")
+        self.cli("blubash", "done", "test")  # finishing it clears the deferral
+        self.assertNotIn("test", self.cli("blubash", "status", "--short")["deferred"])
+
+    def test_status_short_is_compact(self):
+        self.cli("blubash", "done", "brief")
+        short = self.cli("blubash", "status", "--short")
+        self.assertEqual(set(short), {"ok", "progress", "ready", "done", "deferred", "next"})
+        self.assertEqual(short["done"], ["brief"])
+        self.assertEqual(short["next"]["id"], "account")
+
+    def test_reset_restarts_the_setup(self):
+        self.cli("blubash", "done", "account")
+        self.assertEqual(self.cli("blubash", "reset")["progress"], "0/11")
+
+
+if __name__ == "__main__":
+    unittest.main()

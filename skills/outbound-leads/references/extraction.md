@@ -4,7 +4,7 @@
 
 - **Diretórios públicos de parceiros de concorrentes** ("encontre um parceiro", agências parceiras). Melhor ponto de partida: sem login.
 - Páginas de cases e depoimentos, notícias de expansão, vagas de atendimento/SDR, avaliações públicas.
-- **Listas de seguidores de perfis de concorrentes**, só com a conta do operador já logada na janela visível: ritmo lento, poucas dezenas por sessão, apenas contas **comerciais** (bio com serviço, categoria, cidade, site). Parar ao primeiro aviso da plataforma. Prefira uma conta separada da conta principal.
+- **Listas de seguidores de perfis de concorrentes** (procedimento em `instagram-followers.md`), só com a conta do operador já logada na janela visível: ritmo lento, poucas dezenas por sessão, apenas contas **comerciais** (bio com serviço, categoria, cidade, site). Parar ao primeiro aviso da plataforma. Prefira uma conta separada da conta principal.
 
 Fora do limite: login de terceiros, grupos privados, bases vazadas, corretores de dados, telefone ou e-mail pessoal, perfis de pessoas físicas, qualquer traço sensível.
 

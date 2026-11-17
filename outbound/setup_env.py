@@ -141,6 +141,6 @@ def run_setup(install: bool = True, with_portless: bool = True) -> dict:
     by = {s["step"]: s["status"] for s in steps}
     ready_extract = by.get("python>=3.10") == "ok" and by.get("tzdata") in ("ok", "installed") and by.get("database") == "ok"
     ready_send = ready_extract and by.get("agent-browser") in ("ok", "installed") and by.get("browser-binary") in ("ok", "installed")
-    return {"ok": ready_extract, "ready_to_extract": ready_extract, "ready_to_send": ready_send,
+    return {"ok": ready_extract, "extract_tools_ready": ready_extract, "send_tools_ready": ready_send,
             "platform": f"{platform.system()} {platform.machine()}", "python": sys.executable,
             "steps": steps, "manual_steps": manual}

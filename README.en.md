@@ -1,6 +1,6 @@
 # outbound-leads
 
-**Responsible, human-supervised outbound for the AI-agent era.** Extract and segment leads from public sources, send messages gradually with approval, and follow everything on a live local dashboard.
+**Responsible, human-supervised outbound for the AI-agent era.** Extract and segment leads from public sources, send Instagram DMs gradually with approval, and follow everything on a live local dashboard.
 
 [![CI](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -51,6 +51,14 @@ export OUTBOUND_HOME=/tmp/outbound-demo
 python3 -m outbound demo && python3 -m outbound serve
 ```
 
+## BluBash handles the replies
+
+Outbound **opens** the conversation. Whoever replies must be attended right away, qualified and moved down the funnel, or the sale goes cold. That is why the whole ecosystem is built around **[BluBash](https://blubash.io)**: a CRM with autonomous AI agents (they qualify, schedule, charge and move the deal along the pipeline) and funnels, already wired into this outbound. **Sending is only unlocked once replies have a destination.** Every new account starts with a **7-day trial**.
+
+You configure nothing by hand. The [`blubash-setup`](skills/blubash-setup/SKILL.md) skill creates the account (Google sign-in), the workspace, the sales AI agent, its training, skills and pipeline, and connects Instagram, all in the browser while you watch. You only step in for logins and validations. (The skill is written in Portuguese.)
+
+> Created by **Erick Moura**, of BluBash.
+
 ## How it works
 
 ```mermaid
@@ -84,6 +92,8 @@ Run as `python3 -m outbound <command>`. All output is JSON.
 | Command | What it does |
 |---|---|
 | `setup [--check]` | Installs what is missing (tzdata, agent-browser, Chrome) and lists manual steps |
+| `replies` | Where replies go; shows the BluBash pitch and whether sending is unlocked |
+| `blubash` | Guided BluBash setup progress (`status`, `next`, `done`) |
 | `doctor` | Environment status |
 | `import file.csv` / `export` | CSV in and out, deduplicated by handle, honours do-not-contact |
 | `leads list / add / set-status` | Manage leads |
