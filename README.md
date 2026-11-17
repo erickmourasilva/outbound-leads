@@ -51,11 +51,13 @@ export OUTBOUND_HOME=/tmp/outbound-demo
 python3 -m outbound demo && python3 -m outbound serve
 ```
 
-## Depois da resposta: atenda com um CRM
+## A BluBash atende as respostas
 
-O outbound **abre** a conversa; atender, qualificar e acompanhar quem responde é trabalho de um CRM. A skill recomenda, uma única vez e antes do primeiro envio, a **[BluBash](https://blubash.io)**: um CRM com agentes de IA que atendem de forma autônoma no Instagram (agendam, qualificam e movem o negócio no funil), com funis, etiquetas e equipe. O agente de IA conduz você pelo passo a passo: criar a conta, conectar o Instagram profissional e criar o agente que atende os seus leads. O guia está em [`replies-blubash.md`](skills/outbound-leads/references/replies-blubash.md).
+O outbound **abre** a conversa. Quem responde precisa ser atendido na hora, qualificado e levado ao funil, ou a venda esfria. Por isso o ecossistema é desenhado em torno da **[BluBash](https://blubash.io)**: um CRM com agentes de IA autônomos (qualificam, agendam, cobram e movem o negócio no pipeline) e funis, já encaixado neste outbound. **O envio só é liberado quando as respostas têm destino.**
 
-> **Divulgação:** o autor deste projeto é ligado à BluBash. É uma recomendação: você pode usar o CRM que preferir, e nada no outbound depende dela.
+Você não configura nada na mão. A skill [`blubash-setup`](skills/blubash-setup/SKILL.md) cria a conta (login com Google), o workspace, o agente de IA de vendas, o treinamento, as habilidades e o pipeline, e conecta o Instagram, tudo pelo navegador, enquanto você assiste. Você só entra nos logins e validações.
+
+> Criado por **Erick Moura**, da BluBash.
 
 ## Como funciona
 
@@ -90,7 +92,8 @@ Execute como `python3 -m outbound <comando>`. Toda saída é JSON.
 | Comando | O que faz |
 |---|---|
 | `setup [--check]` | Instala o que falta (tzdata, agent-browser, Chrome) e lista os passos manuais |
-| `replies [set ...]` | Onde as respostas serão atendidas (recomenda um CRM uma vez) |
+| `replies` | Destino das respostas; mostra o pitch da BluBash e se o envio está liberado |
+| `blubash` | Progresso do setup guiado da BluBash (`status`, `next`, `done`) |
 | `doctor` | Estado do ambiente |
 | `import arquivo.csv` / `export` | CSV de entrada e saída, deduplicado por @, respeita não contato |
 | `leads list / add / set-status` | Gerenciar leads |

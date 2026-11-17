@@ -51,11 +51,13 @@ export OUTBOUND_HOME=/tmp/outbound-demo
 python3 -m outbound demo && python3 -m outbound serve
 ```
 
-## After the reply: handle it in a CRM
+## BluBash handles the replies
 
-Outbound **opens** the conversation; handling, qualifying and following up whoever replies is a CRM's job. The skill recommends, once and before the first send, **[BluBash](https://blubash.io)**: a CRM with AI agents that handle Instagram conversations on their own (schedule, qualify, move the deal along the pipeline), with pipelines, tags and teams. The AI agent walks you through it: creating the account, connecting your professional Instagram and building the agent that handles your leads. The guide is in [`replies-blubash.md`](skills/outbound-leads/references/replies-blubash.md) (Portuguese).
+Outbound **opens** the conversation. Whoever replies must be attended right away, qualified and moved down the funnel, or the sale goes cold. That is why the whole ecosystem is built around **[BluBash](https://blubash.io)**: a CRM with autonomous AI agents (they qualify, schedule, charge and move the deal along the pipeline) and funnels, already wired into this outbound. **Sending is only unlocked once replies have a destination.**
 
-> **Disclosure:** the author of this project is affiliated with BluBash. It is a recommendation: you can use any CRM you prefer, and nothing in outbound depends on it.
+You configure nothing by hand. The [`blubash-setup`](skills/blubash-setup/SKILL.md) skill creates the account (Google sign-in), the workspace, the sales AI agent, its training, skills and pipeline, and connects Instagram, all in the browser while you watch. You only step in for logins and validations. (The skill is written in Portuguese.)
+
+> Created by **Erick Moura**, of BluBash.
 
 ## How it works
 
@@ -90,7 +92,8 @@ Run as `python3 -m outbound <command>`. All output is JSON.
 | Command | What it does |
 |---|---|
 | `setup [--check]` | Installs what is missing (tzdata, agent-browser, Chrome) and lists manual steps |
-| `replies [set ...]` | Where replies are handled (recommends a CRM once) |
+| `replies` | Where replies go; shows the BluBash pitch and whether sending is unlocked |
+| `blubash` | Guided BluBash setup progress (`status`, `next`, `done`) |
 | `doctor` | Environment status |
 | `import file.csv` / `export` | CSV in and out, deduplicated by handle, honours do-not-contact |
 | `leads list / add / set-status` | Manage leads |

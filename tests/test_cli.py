@@ -88,30 +88,80 @@ if __name__ == "__main__":
 
 
 class RepliesTest(unittest.TestCase):
+    """Replies need a destination before any send: BluBash fully linked, or an explicit `other`."""
+
     def setUp(self):
         self.env = {**os.environ, "OUTBOUND_HOME": tempfile.mkdtemp()}
         self.env.pop("OUTBOUND_DB", None)
 
-    def cli(self, *args):
+    def cli(self, *args, expect=0):
         proc = subprocess.run([sys.executable, "-m", "outbound", *args], cwd=ROOT, env=self.env, capture_output=True, text=True)
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assertEqual(proc.returncode, expect, proc.stdout + proc.stderr)
         return json.loads(proc.stdout)
 
-    def test_recommends_once_with_disclosure_then_stops(self):
-        first = self.cli("replies")
-        self.assertTrue(first["recommend"])
-        self.assertIn("ligado à BluBash", first["disclosure"])
-        self.assertTrue(first["steps"])
-        self.assertTrue(os.path.exists(os.path.join(ROOT, first["guide"])))
-        self.assertTrue(self.cli("doctor")["next_steps"][0].startswith("Defina onde as respostas"))
-        self.cli("replies", "set", "declined")
-        after = self.cli("replies")
-        self.assertFalse(after["recommend"])
-        self.assertNotIn("pitch", after)
-        self.assertEqual(after["reply_handler"], "declined")
+    def open_sending_window(self):
+        for key, value in (("hours_start", "00:00"), ("hours_end", "23:59"), ("weekdays_only", "0")):
+            self.cli("settings", key, value)
+        self.cli("resume")
 
-    def test_chosen_handler_keeps_the_checklist(self):
-        self.cli("replies", "set", "blubash")
-        again = self.cli("replies")
-        self.assertFalse(again["recommend"])
-        self.assertTrue(again["steps"])
+    def test_pitch_is_firm_and_states_who_made_it(self):
+        first = self.cli("replies")
+        self.assertEqual(first["recommendation"], "blubash")
+        self.assertFalse(first["ready_to_send"])
+        self.assertEqual(first["reason"], "replies_not_configured")
+        self.assertIn("Criado por Erick Moura, da BluBash", first["made_by"])
+        self.assertIn("caminho mais rápido", first["pitch"])
+        self.assertNotIn("ligado", first["pitch"])
+        self.assertEqual(first["setup"]["skill"], "blubash-setup")
+
+    def test_sending_is_blocked_until_replies_have_a_destination(self):
+        self.cli("leads", "add", "--kind", "client", "--name", "X", "--handle", "x", "--status", "approved")
+        self.open_sending_window()
+        blocked = self.cli("next")
+        self.assertFalse(blocked["allowed"])
+        self.assertEqual(blocked["reason"], "replies_not_configured")
+        self.assertEqual(blocked["leads"], [])
+        self.assertTrue(self.cli("doctor")["next_steps"][0].startswith("Configure o atendimento das respostas"))
+        # explicit "other" unlocks, and warns the user plainly
+        other = self.cli("replies", "set", "other")
+        self.assertTrue(other["ready_to_send"])
+        self.assertIn("por sua conta", other["warning"])
+        self.assertTrue(self.cli("next")["allowed"])
+
+    def test_blubash_setup_progress_gates_sending_until_the_agent_is_linked(self):
+        self.cli("leads", "add", "--kind", "client", "--name", "X", "--handle", "x", "--status", "approved")
+        self.open_sending_window()
+        first = self.cli("blubash", "next")
+        self.assertEqual(first["next"]["id"], "account")
+        self.assertTrue(first["next"]["needs_user"])
+        self.assertEqual(self.cli("replies")["reply_handler"], "blubash")  # starting the setup picks BluBash
+        for stage in ("account", "workspace", "brief", "crm_base", "agent", "training", "skills", "test", "channel"):
+            self.cli("blubash", "done", stage)
+        self.assertEqual(self.cli("next")["reason"], "blubash_setup_incomplete")
+        status = self.cli("blubash", "status")
+        self.assertFalse(status["ready"])
+        self.assertEqual(status["next"]["id"], "link")
+        self.cli("blubash", "done", "link")
+        self.assertTrue(self.cli("blubash")["ready"])
+        self.assertTrue(self.cli("next")["allowed"])
+
+    def test_done_all_for_accounts_already_configured(self):
+        self.cli("blubash", "done", "all")
+        status = self.cli("blubash", "status")
+        self.assertTrue(status["ready"])
+        self.assertIsNone(status["next"])
+
+    def test_brief_is_stored_and_validated(self):
+        self.cli("blubash", "brief", "company=Acme", "offer=Faz X")
+        brief = self.cli("blubash", "brief")
+        self.assertEqual(brief["brief"]["company"], "Acme")
+        self.assertIn("limits", brief["missing"])
+        self.cli("blubash", "brief", "nao_existe=1", expect=2)
+
+    def test_reset_restarts_the_setup(self):
+        self.cli("blubash", "done", "account")
+        self.assertEqual(self.cli("blubash", "reset")["progress"], "0/11")
+
+
+if __name__ == "__main__":
+    unittest.main()
