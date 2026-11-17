@@ -31,9 +31,17 @@ Documentação: `pt-BR/pipelines/create-pipeline`, `pt-BR/account-settings/creat
 
 - **Agente:**
   1. Confirme que existe uma **equipe** (a do workspace serve) e anote o nome: ela será a Equipe Padrão do canal e o destino das transferências.
-  2. Em **Etiquetas**, crie: `outbound`, `outbound-interessado`, `outbound-quente`, `nao-contatar`.
+  2. Em **Etiquetas**, crie as quatro abaixo, **cada uma com uma cor diferente** no campo **Cor** (por padrão todas saem iguais, o que atrapalha a leitura do funil). Confira na tela que ficaram visivelmente distintas:
+
+     | Etiqueta | Cor | Significado |
+     |---|---|---|
+     | `outbound` | azul | veio da abordagem ativa |
+     | `outbound-interessado` | verde | demonstrou interesse real |
+     | `outbound-quente` | laranja | perfil A, pronto para a equipe |
+     | `nao-contatar` | vermelho | pediu para parar |
+
   3. Em **Pipelines** → **Novo pipeline**, escolha o **modelo Vendas**, dê o nome (ex.: "Outbound") e vincule à equipe. Mantenha as etapas e os **motivos de Ganho e de Perda** do modelo. **Anote os nomes reais** da primeira etapa, da etapa de qualificação e dos motivos de perda: o Comportamento do agente vai usá-los.
-- **Verificar:** etiquetas e pipeline aparecem nas listas, com etapas de Ganho e de Perdido e motivos cadastrados.
+- **Verificar:** as quatro etiquetas aparecem com cores diferentes, e o pipeline com etapas de Ganho e de Perdido e motivos cadastrados.
 
 ## 5. `agent`: criar o agente de vendas
 
