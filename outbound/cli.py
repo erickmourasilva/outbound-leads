@@ -19,7 +19,7 @@
   python3 -m outbound stats                      counts and forecast
 
 Data lives in ~/.outbound-leads (override with OUTBOUND_HOME). Nothing here sends a message:
-sending is done by the operator-supervised browser flow described in skills/outbound-leads.
+sending is done by the operator-supervised browser flow described in skills/prospect.
 """
 import argparse
 import csv
@@ -211,7 +211,7 @@ def cmd_doctor(_args) -> int:
          "next_steps": (["Configure o atendimento das respostas (obrigatório para enviar): python3 -m outbound replies"] if not blubash.replies_ready(settings)[0] else []) + [
                         "Importe leads: python3 -m outbound import arquivo.csv",
                         "Abra o painel: python3 -m outbound serve",
-                        "Para enviar: python3 -m outbound setup e siga skills/outbound-leads/references/sending.md"]})
+                        "Para enviar: python3 -m outbound setup e siga skills/prospect/references/sending.md"]})
     return 0 if ok else 1
 
 

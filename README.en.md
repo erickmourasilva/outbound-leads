@@ -32,7 +32,7 @@ Outbound usually fails in one of two ways: spam blasts that burn your account an
 /plugin install outbound-leads@outbound-leads
 ```
 
-Then ask: *"use outbound-leads to extract partners from my competitors' directories and build the queue."* The skill runs `setup`, installs what is missing and walks you through the rest.
+Then ask: *"use outbound-leads to extract partners from my competitors' directories and build the queue."* Or call the skill directly: `/outbound-leads:prospect`. The skill runs `setup`, installs what is missing and walks you through the rest.
 
 **Other agents (Codex, etc.):** clone the repo and ask the agent to read `AGENTS.md`.
 

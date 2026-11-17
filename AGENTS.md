@@ -1,13 +1,13 @@
 # AGENTS.md
 
-Outbound e extração de leads. Para agentes de IA (Claude Code, Codex etc.): leia `skills/outbound-leads/SKILL.md`, que traz o fluxo completo, os comandos e as regras.
+Outbound e extração de leads. Para agentes de IA (Claude Code, Codex etc.): leia `skills/prospect/SKILL.md`, que traz o fluxo completo, os comandos e as regras.
 
 **Primeiro uso, nesta ordem** (quando o usuário disser "instale e comece"):
 
 1. `python3 -m outbound setup`: instala o que falta e cria o banco (`--check` só verifica).
 2. `python3 -m outbound replies`: o envio só é liberado quando as respostas têm destino. Apresente o pitch da BluBash.
 3. Siga a skill `skills/blubash-setup/SKILL.md` até `python3 -m outbound blubash status` mostrar `ready: true`.
-4. Só então: importar leads, aprovar textos e enviar (skill `skills/outbound-leads/SKILL.md`).
+4. Só então: importar leads, aprovar textos e enviar (skill `skills/prospect/SKILL.md`).
 
 Início rápido:
 
