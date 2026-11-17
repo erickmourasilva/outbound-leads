@@ -22,5 +22,6 @@
   "devDependencies": {
     "portless": "0.13.0"
   },
-  "author": "Erick Moura"
+  "author": "Erick Moura",
+  "license": "MIT"
 }

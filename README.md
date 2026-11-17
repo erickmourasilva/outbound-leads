@@ -69,6 +69,10 @@ docs/                  plano e exemplos
 AGENTS.md  setup.sh    entrada para agentes e setup idempotente
 ```
 
+## Licença
+
+MIT. Veja `LICENSE`.
+
 ## Aviso
 
 Envio automatizado de mensagens pode violar os termos de uso da plataforma e restringir a conta. Mantenha volume baixo, aumente aos poucos e use uma conta própria para essa operação. Prospecção B2B deve respeitar a LGPD: abordar empresas com base em informação pública e profissional, e atender de imediato qualquer pedido para parar.
