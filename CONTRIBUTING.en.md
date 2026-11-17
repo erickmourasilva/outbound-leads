@@ -27,3 +27,7 @@ Python 3.10+ and the standard library only. Please do not add runtime dependenci
 ## Reporting bugs
 
 Open an issue with the output of `python3 -m outbound doctor` and your OS. For security issues, see `SECURITY.en.md`.
+
+## Versions
+
+Claude Code only offers a plugin update when the version number changes. **Every change to `skills/`, `outbound/` or the manifests must bump `version` in `.claude-plugin/plugin.json` and add a `CHANGELOG.md` entry.**
