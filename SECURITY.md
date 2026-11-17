@@ -1,15 +1,17 @@
-# Security and responsible use
+# Segurança e uso responsável
 
-## Reporting a vulnerability
+> 🇬🇧 [English version](SECURITY.en.md)
 
-Please report security issues privately through GitHub: **Security → Report a vulnerability** on this repository. Do not open a public issue for vulnerabilities.
+## Reportando uma vulnerabilidade
 
-## Design notes
+Reporte problemas de segurança em privado pelo GitHub: **Security → Report a vulnerability** neste repositório. Não abra issue pública para vulnerabilidades.
 
-- The dashboard binds to `127.0.0.1` only and accepts changes only with a custom header, which blocks cross-site requests.
-- Data lives in a local SQLite file (`~/.outbound-leads`). Nothing is sent to any server by this project.
-- The tool never types passwords, codes or tokens. Logins are done by the operator in a visible browser window.
+## Notas de projeto
 
-## Responsible use
+- O painel escuta só em `127.0.0.1` e aceita alterações apenas com um cabeçalho personalizado, o que bloqueia requisições de outros sites.
+- Os dados ficam num arquivo SQLite local (`~/.outbound-leads`). Este projeto não envia nada para nenhum servidor.
+- A ferramenta nunca digita senhas, códigos ou tokens. O login é feito pelo operador numa janela de navegador visível.
 
-Automated messaging may violate a platform's terms and local law (for example GDPR, Brazil's LGPD, anti-spam rules). Use a dedicated account, keep volume low, honour every opt-out, and only use public, professional information. You are responsible for how you use this software.
+## Uso responsável
+
+Mensagens automatizadas podem violar os termos da plataforma e a lei local (como a LGPD e regras contra spam). Use uma conta dedicada, mantenha o volume baixo, atenda todo pedido para parar e use só informação pública e profissional. A responsabilidade pelo uso do software é de quem o usa.

@@ -2,8 +2,8 @@
 
 ## 0.1.0
 
-- Local SQLite store, live dashboard with sending forecast, CSV import and export, do-not-contact list.
-- Send scheduler: pause, weekday, business hours, warm-up cap, spacing; `blocked` results auto-pause.
-- JSON CLI for agents: `setup`, `doctor`, `leads`, `next`, `record-send`, `pause`, `resume`, `settings`, `demo`.
-- Claude Code plugin and skill, `AGENTS.md`, cross-platform `setup` and CI on macOS, Linux and Windows.
-- Demo mode with fictional data.
+- Banco SQLite local, painel ao vivo com previsão de envio, importação e exportação CSV, lista de não contato.
+- Agendador de envio: pausa, dia útil, horário comercial, teto de aquecimento e intervalo; resultado `blocked` pausa tudo.
+- CLI em JSON para agentes: `setup`, `doctor`, `leads`, `next`, `record-send`, `pause`, `resume`, `settings`, `demo`.
+- Plugin e skill do Claude Code, `AGENTS.md`, setup multiplataforma e CI em macOS, Linux e Windows.
+- Modo de demonstração com dados fictícios.

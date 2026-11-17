@@ -1,8 +1,10 @@
-# Contributing
+# Contribuindo
 
-Thanks for helping. This project exists to make outbound **gradual, supervised and honest**, so contributions are judged against those principles (see the README).
+Obrigado por ajudar. Este projeto existe para tornar o outbound **gradual, supervisionado e honesto**, então as contribuições são avaliadas por esses princípios (veja o README).
 
-## Setup
+> 🇬🇧 [English version](CONTRIBUTING.en.md)
+
+## Preparação
 
 ```bash
 git clone https://github.com/erickmourasilva/outbound-leads && cd outbound-leads
@@ -10,20 +12,20 @@ python3 -m outbound setup --check
 python3 -m unittest discover -s tests -v
 ```
 
-Python 3.10+ and the standard library only. Please do not add runtime dependencies without discussing it first.
+Python 3.10+ e só a biblioteca padrão. Não adicione dependências de execução sem discutir antes.
 
 ## Pull requests
 
-- One focused change per PR, with tests. CI runs on macOS, Linux and Windows.
-- Keep user data out of the repository: no real leads, handles, messages or screenshots. Use the `demo` command for examples.
-- Commands must keep printing JSON, so agents can read them.
+- Uma mudança focada por PR, com testes. A CI roda em macOS, Linux e Windows.
+- Nada de dados de usuário no repositório: sem leads, perfis, mensagens ou capturas de tela reais. Use o comando `demo` para exemplos.
+- Os comandos devem continuar imprimindo JSON, para que agentes consigam ler.
 
-## What will not be merged
+## O que não será aceito
 
-- Anything that disguises automation (simulated typing, fingerprint spoofing) or bypasses CAPTCHA, rate limits or blocks.
-- Features that collect personal phone numbers, e-mails or sensitive attributes, or that scrape private or gated data.
-- Defaults that send without explicit operator approval, or that raise the sending caps.
+- Qualquer coisa que disfarce a automação (digitação simulada, falsificação de fingerprint) ou contorne CAPTCHA, limites de taxa ou bloqueios.
+- Recursos que coletem telefone ou e-mail pessoal, atributos sensíveis, ou que extraiam dados privados ou protegidos.
+- Padrões que enviem sem aprovação explícita do operador ou que aumentem os tetos de envio.
 
-## Reporting bugs
+## Reportando bugs
 
-Open an issue with the output of `python3 -m outbound doctor` and your OS. For security issues, see `SECURITY.md`.
+Abra uma issue com a saída de `python3 -m outbound doctor` e o seu sistema operacional. Para falhas de segurança, veja o `SECURITY.md`.
