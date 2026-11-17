@@ -32,7 +32,7 @@ O outbound costuma falhar de duas formas: disparos em massa que queimam a conta 
 /plugin install outbound-leads@outbound-leads
 ```
 
-Depois peça: *"use o outbound-leads para extrair parceiros dos diretórios dos meus concorrentes e montar a fila."* A skill roda o `setup`, instala o que falta e conduz o resto.
+Depois peça: *"use o outbound-leads para extrair parceiros dos diretórios dos meus concorrentes e montar a fila."* Ou chame a skill direto: `/outbound-leads:prospect`. A skill roda o `setup`, instala o que falta e conduz o resto.
 
 **Outros agentes (Codex etc.):** clone o repositório e peça para o agente ler o `AGENTS.md`.
 

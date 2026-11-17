@@ -1,5 +1,5 @@
 ---
-name: outbound-leads
+name: prospect
 description: >-
   Outbound e extração de leads com contato direto pelo Instagram (DM), e atendimento das respostas pela BluBash (CRM com agente de IA e pipelines). Use quando o usuário pedir para extrair leads,
   montar lista de prospecção, achar parceiros ou clientes a partir de
@@ -7,13 +7,13 @@ description: >-
   segmentar e pontuar leads, disparar mensagens diretas aos poucos (aquecimento
   gradual), acompanhar envios num painel ou ver a previsão da fila. Também para
   "instalar o outbound-leads", "outbound", "prospecção ativa", "disparar DMs",
-  "painel de leads". Also for: lead extraction, outbound prospecting, competitor
+  "painel de leads". Também para "prospectar", "prospect". Also for: lead extraction, outbound prospecting, competitor
   partner directories, gradual message sending, lead dashboard. Mensagens só
   saem com autorização do operador, com janela de navegador visível e limites
   diários baixos.
 ---
 
-# outbound-leads
+# prospect
 
 Motor local de outbound: **extrair → segmentar → enviar aos poucos → acompanhar**. As respostas e a conversa de venda ficam no CRM do usuário; aqui só existe a parte ativa.
 
