@@ -32,3 +32,10 @@ CRM, funis, caixa de entrada e atendimento. Depois que o contato responde, a con
 - Contas que não aceitam solicitações de contato: a mensagem pode não ser entregue.
 - LGPD: usar apenas informação pública e profissional; não coletar telefone nem e-mail pessoal; não tratar dados sensíveis.
 - Dados de leads ficam fora do git (`data/`, `imports/`, `exports/`).
+
+## Status de validação do setup da BluBash
+
+Rodado do zero por um agente limpo, só com os guias, contra um ambiente de homologação (`BLUBASH_APP_URL`):
+
+- **Validado de ponta a ponta:** perguntas da empresa, login com Google, workspace, equipe, etiquetas com cores, pipeline pelo modelo Vendas, agente de vendas, treinamento, habilidades (inclusive ganho e perda) e criação do canal Instagram até o clique em "Conectar com Instagram".
+- **Não exercitado nesta rodada:** o login do Instagram, `link` (ativar e vincular o agente), `verify` (DM real) e `test` (adiado por instabilidade do ambiente de homologação).
