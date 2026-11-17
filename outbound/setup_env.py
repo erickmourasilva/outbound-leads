@@ -2,7 +2,7 @@
 
 Needed to extract and track leads : Python >= 3.10, time zone data (tzdata on Windows), the local database.
 Needed to send messages           : Node + npm, the agent-browser CLI and its Chrome download.
-Optional                          : pnpm + portless (named dashboard URL).
+Optional                          : portless (pretty dashboard URL, https://outbound-leads.localhost).
 """
 import os
 import platform
@@ -56,7 +56,7 @@ def agent_browser_ok() -> tuple[bool, str]:
     return ok, detail or path
 
 
-def run_setup(install: bool = True, with_portless: bool = False) -> dict:
+def run_setup(install: bool = True, with_portless: bool = True) -> dict:
     os_key = _os_key()
     steps: list[dict] = []
     manual: list[str] = []
@@ -128,12 +128,15 @@ def run_setup(install: bool = True, with_portless: bool = False) -> dict:
 
     # 6. Optional: named dashboard URL
     if with_portless:
-        pnpm = shutil.which("pnpm")
-        if pnpm and os.path.exists("package.json"):
-            ok, detail = _run([pnpm, "install", "--silent"])
-            step("portless", "installed" if ok else "failed", detail)
+        if shutil.which("portless"):
+            step("portless", "ok", shutil.which("portless"))
+        elif npm and install:
+            ok, detail = _run([npm, "install", "-g", "portless"])
+            step("portless", "installed" if ok and shutil.which("portless") else "failed", detail)
         else:
-            step("portless", "manual", "instale o pnpm (npm install -g pnpm) e rode pnpm install")
+            step("portless", "skipped", "opcional: npm install -g portless")
+        if shutil.which("portless"):
+            manual.append("Se o navegador avisar sobre o certificado de https://outbound-leads.localhost, rode uma vez: portless trust (pede senha de administrador)")
 
     by = {s["step"]: s["status"] for s in steps}
     ready_extract = by.get("python>=3.10") == "ok" and by.get("tzdata") in ("ok", "installed") and by.get("database") == "ok"

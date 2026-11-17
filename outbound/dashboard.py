@@ -167,5 +167,6 @@ def serve(port: int | None = None) -> None:
     """Bind to 127.0.0.1 only. portless injects PORT; fall back to 8787."""
     port = port or int(os.environ.get("PORT", "8787"))
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"Painel local na porta {port} (127.0.0.1). Ctrl+C para parar.", flush=True)
+    url = os.environ.get("PORTLESS_URL") or f"http://127.0.0.1:{port}"
+    print(f"Painel: {url}  (porta {port}, só local). Ctrl+C para parar.", flush=True)
     server.serve_forever()

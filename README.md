@@ -105,7 +105,7 @@ Colunas do CSV: `kind,segment,name,handle,source_kind,source_ref,source_url,sign
 | Requer | Python 3.10+ (biblioteca padrão; `tzdata` no Windows, instalado pelo `setup`) | Node + npm, o `agent-browser` e o Chrome dele (o `setup` instala) |
 | Plataformas | CI em macOS, Linux e Windows (Python 3.10, 3.12, 3.13) | O `agent-browser` cobre os três; no Linux pode exigir `sudo agent-browser install --with-deps` |
 
-Opcional: pnpm e `portless` para uma URL nomeada do painel (`pnpm dev` → `https://outbound-leads.localhost`).
+Painel: `python3 -m outbound serve` sobe sozinho em `https://outbound-leads.localhost` quando o `portless` está instalado (o `setup` instala), e cai para `http://127.0.0.1:8787` quando não está. `python3 -m outbound url` mostra o endereço. Na primeira vez, o navegador pode pedir confiança no certificado: rode `portless trust` uma vez.
 
 ## Roteiro
 

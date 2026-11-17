@@ -22,7 +22,7 @@ CRM, funis, caixa de entrada e atendimento. Depois que o contato responde, a con
 
 - Armazenamento: SQLite local como fonte única; CSV para entrada e saída.
 - Navegador: `agent-browser` com janela visível; o login é feito pelo operador.
-- Painel: servidor só em `127.0.0.1`, URL estável via `portless`; alterações só com cabeçalho `X-Requested-With`.
+- Painel: servidor só em `127.0.0.1`; o `serve` usa o `portless` sozinho quando instalado (`https://outbound-leads.localhost`) e cai para localhost simples; alterações só com cabeçalho `X-Requested-With`.
 - Afirmações nas mensagens: só as comprovadas em material público do produto.
 - Dados de leads, textos e perfis contatados ficam em arquivos locais, nunca no código.
 

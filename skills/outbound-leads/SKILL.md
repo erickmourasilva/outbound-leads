@@ -34,13 +34,13 @@ Use `--check` para só verificar, sem instalar nada. **Avise o usuário antes de
 |---|---|---|
 | Extrair e acompanhar leads | Python 3.10+, `tzdata` (Windows), banco local | Instala `tzdata` com pip se faltar e cria o banco |
 | Enviar mensagens | Node + npm, `agent-browser`, Chrome | `npm install -g agent-browser` e `agent-browser install` |
-| URL nomeada do painel (opcional) | pnpm, `portless` | Só com `--with-portless` |
+| URL bonita do painel (opcional) | `portless` | `npm install -g portless` (pule com `--no-portless`) |
 
 Leia o JSON de resposta: `ready_to_extract` e `ready_to_send` dizem o que já pode ser feito, e `manual_steps` lista o que o usuário precisa fazer (instalar Python ou Node, permissão de administrador, `sudo agent-browser install --with-deps` no Linux). Não prossiga para o envio enquanto `ready_to_send` for `false`. Depois de resolver, rode o `setup` de novo.
 
 `python3 -m outbound doctor` mostra o estado a qualquer momento. Se `python3` não existir, use `python` ou `py -3`; o campo `python` do `doctor` traz o interpretador correto.
 
-Painel ao vivo: `python3 -m outbound serve` (ou `pnpm dev`), em segundo plano. Abra-o numa janela **visível** para o usuário acompanhar.
+Painel ao vivo: rode `python3 -m outbound serve` em segundo plano. Se o `portless` estiver instalado, ele sobe sozinho em `https://outbound-leads.localhost`; senão, em `http://127.0.0.1:8787`. Pergunte o endereço com `python3 -m outbound url` e abra-o numa janela **visível** (`agent-browser --headed`) para o usuário acompanhar. Na primeira vez com o portless, o navegador pode pedir confiança no certificado: peça ao usuário para rodar `portless trust` (muda a confiança de certificados do sistema e pede senha; **não rode você**).
 
 ## 2. Fluxo
 
@@ -67,7 +67,8 @@ Painel ao vivo: `python3 -m outbound serve` (ou `pnpm dev`), em segundo plano. A
 | `settings [chave valor]` | Limites: `base_daily`, `weekly_step`, `max_daily`, horários, intervalos |
 | `dnc <@> [motivo]` | Não contatar, para sempre |
 | `stats` | Contagens e previsão |
-| `serve [--port N]` | Painel local |
+| `serve [--plain\|--port N]` | Painel local (usa o portless sozinho) |
+| `url` | Endereço do painel |
 
 Status dos leads: `discovered → qualified → approved → queued → sent` (saídas: `skipped`, `failed`, `do_not_contact`).
 

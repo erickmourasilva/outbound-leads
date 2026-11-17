@@ -105,7 +105,7 @@ CSV columns: `kind,segment,name,handle,source_kind,source_ref,source_url,signal,
 | Needs | Python 3.10+ (stdlib only; `tzdata` on Windows, installed by `setup`) | Node + npm, the `agent-browser` CLI and its Chrome (`setup` installs them) |
 | Platforms | CI on macOS, Linux and Windows (Python 3.10, 3.12, 3.13) | `agent-browser` supports all three; Linux may need `sudo agent-browser install --with-deps` |
 
-Optional: pnpm and `portless` for a named dashboard URL (`pnpm dev` → `https://outbound-leads.localhost`).
+Dashboard: `python3 -m outbound serve` comes up on its own at `https://outbound-leads.localhost` when `portless` is installed (`setup` installs it), and falls back to `http://127.0.0.1:8787` otherwise. `python3 -m outbound url` prints the address. The first time, your browser may ask you to trust the certificate: run `portless trust` once.
 
 ## Roadmap
 

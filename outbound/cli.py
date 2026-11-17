@@ -4,7 +4,8 @@
   python3 -m outbound demo                       fill an EMPTY database with fictional leads (screenshots, trying it out)
   python3 -m outbound doctor                     check the environment and say what to fix
   python3 -m outbound init                       create the local database
-  python3 -m outbound serve [--port N]           live dashboard on 127.0.0.1
+  python3 -m outbound serve [--plain|--port N]   live dashboard (https://outbound-leads.localhost via portless, else 127.0.0.1)
+  python3 -m outbound url                        where the dashboard is
   python3 -m outbound leads list|add|set-status  manage leads
   python3 -m outbound import file.csv            add leads from a CSV (dedupe, honours do-not-contact)
   python3 -m outbound export [file.csv]          export every lead to CSV
@@ -71,7 +72,7 @@ def cmd_demo(_args) -> int:
 
 
 def cmd_setup(args) -> int:
-    result = setup_env.run_setup(install=not args.check, with_portless=args.with_portless)
+    result = setup_env.run_setup(install=not args.check, with_portless=not args.no_portless)
     out(result)
     return 0 if result["ok"] else 1
 
@@ -90,8 +91,8 @@ def cmd_doctor(_args) -> int:
          "fix": "Necessário só para enviar: python3 -m outbound setup  (instala agent-browser e o Chrome)"},
         {"name": "pnpm", "ok": bool(which("pnpm")), "required": False, "detail": which("pnpm") or "não encontrado",
          "fix": "Opcional (URL nomeada do painel): npm install -g pnpm && pnpm install"},
-        {"name": "portless", "ok": bool(which("portless") or os.path.isdir("node_modules/portless")), "required": False,
-         "detail": which("portless") or "não encontrado", "fix": "Opcional: pnpm install (instala o portless local)"},
+        {"name": "portless", "ok": bool(which("portless")), "required": False,
+         "detail": which("portless") or "não encontrado", "fix": "Opcional (URL bonita do painel): python3 -m outbound setup"},
     ]
     db.init()
     with db.connect() as con:
@@ -113,9 +114,51 @@ def cmd_init(_args) -> int:
     return 0
 
 
+APP_NAME = "outbound-leads"
+
+
+def serve_plan(*, portless_path: str | None, env: dict, plain: bool, port: int | None, name: str = APP_NAME) -> tuple[str, list[str] | None]:
+    """Decide how to serve: ("plain", None) on 127.0.0.1, or ("portless", cmd) for https://<name>.localhost.
+
+    Already running under portless (it injects PORTLESS_URL), --plain, an explicit --port, or no portless
+    installed all mean plain.
+    """
+    if plain or port or env.get("PORTLESS_URL") or not portless_path:
+        return "plain", None
+    return "portless", [portless_path, name, sys.executable, "-m", "outbound", "serve"]
+
+
 def cmd_serve(args) -> int:
+    import subprocess
+
     db.init()
+    mode, cmd = serve_plan(portless_path=shutil.which("portless"), env=os.environ, plain=args.plain, port=args.port, name=args.name)
+    if mode == "portless":
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        print(f"Subindo o painel via portless: https://{args.name}.localhost", flush=True)
+        code = subprocess.call(cmd, cwd=root)
+        if code == 0:
+            return 0
+        print("portless falhou; voltando para o localhost simples.", file=sys.stderr, flush=True)
     dashboard.serve(args.port)
+    return 0
+
+
+def cmd_url(args) -> int:
+    """Where is the dashboard? Prefer the pretty portless URL when it is registered."""
+    import subprocess
+
+    portless = shutil.which("portless")
+    if portless:
+        try:
+            listing = subprocess.run([portless, "list"], capture_output=True, text=True, timeout=15).stdout
+            if f"https://{args.name}.localhost" in listing:
+                out({"ok": True, "url": f"https://{args.name}.localhost", "via": "portless"})
+                return 0
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    out({"ok": True, "url": "http://127.0.0.1:8787", "via": "plain",
+         "note": "painel sem portless; rode: python3 -m outbound serve (em segundo plano)"})
     return 0
 
 
@@ -337,13 +380,18 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("demo").set_defaults(fn=cmd_demo)
     su = sub.add_parser("setup")
     su.add_argument("--check", action="store_true", help="só verifica, não instala nada")
-    su.add_argument("--with-portless", action="store_true", help="instala também pnpm/portless (URL nomeada do painel)")
+    su.add_argument("--no-portless", action="store_true", help="não instala o portless (URL bonita do painel)")
     su.set_defaults(fn=cmd_setup)
     sub.add_parser("doctor").set_defaults(fn=cmd_doctor)
     sub.add_parser("init").set_defaults(fn=cmd_init)
     s = sub.add_parser("serve")
-    s.add_argument("--port", type=int)
+    s.add_argument("--port", type=int, help="porta fixa (desliga o portless)")
+    s.add_argument("--plain", action="store_true", help="não usa o portless")
+    s.add_argument("--name", default=APP_NAME, help="nome da URL do portless")
     s.set_defaults(fn=cmd_serve)
+    u = sub.add_parser("url")
+    u.add_argument("--name", default=APP_NAME)
+    u.set_defaults(fn=cmd_url)
 
     leads = sub.add_parser("leads").add_subparsers(dest="sub", required=True)
     ll = leads.add_parser("list")
