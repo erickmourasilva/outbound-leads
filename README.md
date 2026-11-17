@@ -1,57 +1,135 @@
 # outbound-leads
 
-Projeto pessoal do Erick: outbound e extração de leads. Extrai e segmenta leads (clientes, parceiros e inteligência de concorrentes), dispara mensagens diretas aos poucos e mostra tudo num painel local.
+**Outbound responsável e supervisionado por humanos, para a era dos agentes de IA.** Extraia e segmente leads de fontes públicas, envie mensagens aos poucos, com aprovação, e acompanhe tudo num painel local ao vivo.
 
-**Escopo:** só a parte ativa. Encontrar quem abordar (clientes, parceiros e inteligência de concorrentes), segmentar, enviar aos poucos e acompanhar. Quando a pessoa responde, a conversa segue em outro sistema (o CRM e o time de atendimento). Nada disso é reimplementado aqui.
+[![CI](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/erickmourasilva/outbound-leads/actions/workflows/ci.yml)
+[![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
+![macOS | Linux | Windows](https://img.shields.io/badge/plataforma-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)
 
-## Como rodar
+> 🇬🇧 [Read in English](README.en.md)
 
-Requisitos: Python 3.11+ (só biblioteca padrão), Node 22+ e pnpm. O `portless` é instalado como dependência de desenvolvimento.
+![Painel com dados fictícios de demonstração](docs/dashboard.png)
 
-```bash
-pnpm install
-pnpm db:init          # cria data/outbound.db
-pnpm db:seed          # importa leads já contatados de data/seed_leads.json (local, fora do git; veja docs/examples)
-pnpm dev              # painel em https://outbound-leads.localhost (via portless)
-pnpm test             # testes
+*O painel, rodando com dados fictícios de demonstração.*
+
+## Por quê
+
+O outbound costuma falhar de duas formas: disparos em massa que queimam a conta e a reputação, ou planilhas que ninguém mantém. O `outbound-leads` é o caminho do meio:
+
+- **Extrair primeiro, enviar depois.** A lista é montada e segmentada antes de qualquer mensagem sair.
+- **Gradual por construção.** Aquecimento, teto diário, horário comercial, intervalo entre mensagens e parada automática no primeiro alerta da plataforma.
+- **Um humano no comando.** Nada é enviado sem a sua aprovação. A janela do navegador é sempre visível, e o login é seu.
+- **Feito para agentes de IA.** Instale como plugin do Claude Code (ou aponte qualquer agente para o `AGENTS.md`) e peça. Todo comando imprime JSON.
+- **Seus dados são seus.** Um arquivo SQLite local em `~/.outbound-leads`. Sem nuvem, sem telemetria.
+
+## Instalação
+
+**Claude Code (plugin + skill):**
+
+```
+/plugin marketplace add erickmourasilva/outbound-leads
+/plugin install outbound-leads@outbound-leads
 ```
 
-Sem o `portless`: `pnpm serve` (porta 8787, só em `127.0.0.1`).
+Depois peça: *"use o outbound-leads para extrair parceiros dos diretórios dos meus concorrentes e montar a fila."* A skill roda o `setup`, instala o que falta e conduz o resto.
+
+**Outros agentes (Codex etc.):** clone o repositório e peça para o agente ler o `AGENTS.md`.
+
+**Manual:**
+
+```bash
+git clone https://github.com/erickmourasilva/outbound-leads && cd outbound-leads
+./setup.sh                  # instala o que falta (Windows: .\setup.ps1)
+python3 -m outbound serve   # painel em http://127.0.0.1:8787
+```
+
+Para testar sem tocar em dados reais:
+
+```bash
+export OUTBOUND_HOME=/tmp/outbound-demo
+python3 -m outbound demo && python3 -m outbound serve
+```
+
+## Como funciona
+
+```mermaid
+flowchart LR
+    A[Fontes públicas<br/>diretórios, notícias, vagas, mapas] --> B[Extrair<br/>importar CSV, deduplicar]
+    B --> C[Segmentar e pontuar]
+    C --> D{Você aprova<br/>textos e lista}
+    D --> E[Fila]
+    E --> F[Envio supervisionado<br/>aquecimento, teto, horário, intervalo]
+    F --> G[Respostas seguem no<br/>seu CRM ou caixa de entrada]
+    B -.-> H[(SQLite)]
+    E -.-> H
+    F -.-> H
+    H --> I[Painel ao vivo<br/>e previsão]
+```
+
+## Princípios
+
+1. **Aprovação primeiro.** Nenhuma mensagem sai sem autorização explícita.
+2. **Gradual.** Começa em 5 por dia, +5 por semana, teto de 30 por padrão.
+3. **Visível.** O navegador nunca é headless, e a ferramenta nunca digita credenciais.
+4. **Honesto.** Sem digitação falsa, sem burlar CAPTCHA, sem evadir controles da plataforma.
+5. **Parar no alerta.** Qualquer bloqueio, aviso ou "tente novamente mais tarde" pausa tudo.
+6. **Respeitar o "não".** A lista de não contato é permanente.
+7. **Só dados públicos e profissionais.** Sem telefone ou e-mail pessoal, sem traços sensíveis.
+
+## Comandos
+
+Execute como `python3 -m outbound <comando>`. Toda saída é JSON.
 
 | Comando | O que faz |
 |---|---|
-| `pnpm leads:import imports/arquivo.csv` | Adiciona leads de um CSV. Deduplica por @, respeita a lista de não contato |
-| `pnpm leads:export` | Exporta todos os leads para `exports/leads-AAAAMMDD-HHMM.csv` |
-| `pnpm stats` | Contagens e previsão em JSON |
-| `python3 -m outbound dnc <@> [motivo]` | Coloca um perfil na lista de não contato |
+| `setup [--check]` | Instala o que falta (tzdata, agent-browser, Chrome) e lista os passos manuais |
+| `doctor` | Estado do ambiente |
+| `import arquivo.csv` / `export` | CSV de entrada e saída, deduplicado por @, respeita não contato |
+| `leads list / add / set-status` | Gerenciar leads |
+| `next` | Posso enviar agora? Retorna o motivo, o limite do dia e os próximos leads |
+| `record-send <@> ok\|failed\|not_accepting\|blocked` | Registra um envio (`blocked` pausa tudo) |
+| `pause` / `resume` | Chave geral. O envio começa **pausado** |
+| `settings [chave valor]` | Aquecimento, horários e intervalos |
+| `dnc <@>` | Nunca mais contatar |
+| `stats` | Contagens e previsão |
+| `serve` | Painel ao vivo |
+| `demo` | Preenche um banco vazio com leads fictícios |
 
-Formato do CSV de importação: `kind,segment,name,handle,source_kind,source_ref,source_url,signal,signal_date,score,status`.
-`kind` é `client`, `partner` ou `intel`.
+Colunas do CSV: `kind,segment,name,handle,source_kind,source_ref,source_url,signal,signal_date,score,status` (`kind` é `client`, `partner` ou `intel`).
 
-## Painel
+## Compatibilidade
 
-Atualiza sozinho a cada 5 segundos: totais por tipo e status, enviados hoje contra o limite, previsão de término da fila, plano dos próximos dias, segmentos, lista de leads com filtros, últimos disparos e eventos. O botão **Pausar / retomar** liga e desliga o envio. O envio começa **pausado**.
+| | Extrair e acompanhar | Enviar mensagens |
+|---|---|---|
+| Requer | Python 3.10+ (biblioteca padrão; `tzdata` no Windows, instalado pelo `setup`) | Node + npm, o `agent-browser` e o Chrome dele (o `setup` instala) |
+| Plataformas | CI em macOS, Linux e Windows (Python 3.10, 3.12, 3.13) | O `agent-browser` cobre os três; no Linux pode exigir `sudo agent-browser install --with-deps` |
 
-## Regras de envio (padrão)
+Painel: `python3 -m outbound serve` sobe sozinho em `https://outbound-leads.localhost` quando o `portless` está instalado (o `setup` instala), e cai para `http://127.0.0.1:8787` quando não está. `python3 -m outbound url` mostra o endereço. Na primeira vez, o navegador pode pedir confiança no certificado: rode `portless trust` uma vez.
 
-- Aquecimento: 5 mensagens por dia na primeira semana, +5 por semana, teto de 30.
-- Horário comercial (9h às 20h, Brasília), dias úteis, com 90 a 240 segundos aleatórios entre envios.
-- Pausa total ao primeiro alerta, bloqueio ou erro da plataforma.
-- Só envia com autorização do operador. A lista de não contato é permanente.
-- Navegador sempre **com janela visível**. O operador faz o login; este projeto nunca digita senha nem código.
-- Não simula comportamento humano para disfarçar automação, e não contorna CAPTCHA nem bloqueios.
-- A sessão do navegador é escolhida pela variável `IG_SESSION` (padrão `ig-session`).
+## Roteiro
 
-## Estrutura
+- [x] Banco local, painel ao vivo e previsão
+- [x] Plugin do Claude Code, skill, CLI em JSON, setup multiplataforma e CI
+- [x] Agendador de envio (pausa, horário, teto, intervalo, pausa automática em bloqueio)
+- [ ] Worker de envio supervisionado, com fila diária de aprovação
+- [ ] Relatório A/B: taxa de resposta por variante de mensagem
+- [ ] Mais conectores de extração
+- [ ] Painel com i18n (hoje em português)
+- [ ] Webhooks opcionais de CRM para sincronizar respostas e pedidos de parar
 
-```
-outbound/        pacote Python: db, forecast, dashboard (painel), cli
-sender/          protótipo supervisionado de envio (agent-browser, com janela)
-tests/           testes (unittest)
-docs/PLAN.md     plano, decisões e riscos
-data/ exports/ imports/   dados locais, fora do git
-```
+## Uso responsável
 
-## Aviso
+Mensagens automatizadas podem violar os termos de uso da plataforma e levar à restrição da conta. Mantenha o volume baixo, use uma conta dedicada, atenda todo pedido para parar e cumpra a lei do seu país (como a LGPD). A responsabilidade pelo uso é de quem usa. Veja [SECURITY.md](SECURITY.md).
 
-Envio automatizado de mensagens pode violar os termos de uso da plataforma e restringir a conta. Mantenha volume baixo, aumente aos poucos e use uma conta própria para essa operação. Prospecção B2B deve respeitar a LGPD: abordar empresas com base em informação pública e profissional, e atender de imediato qualquer pedido para parar.
+## Contribuindo
+
+Issues e PRs são bem-vindos. Veja [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Licença
+
+[MIT](LICENSE)
+
+---
+
+Criado por **[Erick Moura](https://github.com/erickmourasilva)**.

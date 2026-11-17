@@ -2,12 +2,14 @@
   "name": "outbound-leads",
   "version": "0.1.0",
   "private": true,
-  "description": "Projeto pessoal do Erick: outbound e extração de leads, com disparo gradual de mensagens e painel local.",
+  "description": "Outbound e extração de leads: extrai e segmenta clientes e parceiros, dispara mensagens aos poucos e acompanha tudo num painel local.",
   "packageManager": "pnpm@10.34.7",
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   },
   "scripts": {
+    "setup": "python3 -m outbound setup",
+    "doctor": "python3 -m outbound doctor",
     "dev": "portless outbound-leads python3 -m outbound serve",
     "serve": "python3 -m outbound serve",
     "db:init": "python3 -m outbound init",
@@ -20,5 +22,22 @@
   "devDependencies": {
     "portless": "0.13.0"
   },
-  "author": "Erick Moura"
+  "author": "Erick Moura",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erickmourasilva/outbound-leads.git"
+  },
+  "homepage": "https://github.com/erickmourasilva/outbound-leads",
+  "bugs": {
+    "url": "https://github.com/erickmourasilva/outbound-leads/issues"
+  },
+  "keywords": [
+    "outbound",
+    "lead-generation",
+    "prospecting",
+    "sales",
+    "ai-agents",
+    "claude-code-plugin"
+  ]
 }

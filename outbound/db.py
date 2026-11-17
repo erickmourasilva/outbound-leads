@@ -7,10 +7,12 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.environ.get("OUTBOUND_DB", os.path.join(ROOT, "data", "outbound.db"))
+# All user data lives outside the code (and outside the plugin cache) so updates never touch it.
+HOME = os.path.expanduser(os.environ.get("OUTBOUND_HOME", "~/.outbound-leads"))
+DB_PATH = os.environ.get("OUTBOUND_DB", os.path.join(HOME, "outbound.db"))
 
 # Lead kinds: client (prospect), partner (agency/integrator/reseller), intel (competitor probing)
+RESULTS = ("ok", "failed", "not_accepting", "blocked")  # "blocked" auto-pauses sending
 KINDS = ("client", "partner", "intel")
 # Status flow: discovered -> qualified -> approved -> queued -> sent
 # Side exits: skipped, failed, do_not_contact

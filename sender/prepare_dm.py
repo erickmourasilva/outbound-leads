@@ -4,7 +4,7 @@ import json, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-D = os.path.join(ROOT, "data")
+D = os.path.expanduser(os.environ.get("OUTBOUND_HOME", "~/.outbound-leads"))
 os.makedirs(os.path.join(D, "screens"), exist_ok=True)
 S = os.environ.get("IG_SESSION", "ig-session")
 h = sys.argv[1]
@@ -12,7 +12,7 @@ msg = json.load(open(f"{D}/seed_messages.json"))[h]
 
 
 def ab(*args):
-    r = subprocess.run(["agent-browser", "--headed", "--session", S, *args], capture_output=True, text=True, cwd="/tmp")
+    r = subprocess.run(["agent-browser", "--headed", "--session", S, *args], capture_output=True, text=True)
     return (r.stdout or "") + (r.stderr or "")
 
 
