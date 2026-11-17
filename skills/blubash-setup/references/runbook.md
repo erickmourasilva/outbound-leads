@@ -9,6 +9,8 @@ Para cada etapa: **Agente** é o que você faz, **Usuário** é o que só ele fa
 - **Agente:** abra o endereço `signup` do `blubash status` (se já houver login, o app abre direto: verifique e pule). Clique em **Cadastrar com Google**.
 - **Usuário:** escolher a conta Google e autorizar na janela do Google. Peça: "Preciso de você: escolha sua conta Google e autorize. Me avise quando o app abrir."
 - O Google abre **na mesma aba** (é um redirecionamento, não um pop-up). Depois do consentimento o navegador passa por um endereço de retorno (`.../auth/callback`) e volta sozinho ao app, então a URL intermediária não é critério.
+- O Google pode abrir o campo **E-mail ou telefone** ou a lista **Escolha uma conta** (se já houver contas no navegador). As duas são do usuário: não clique nem digite por ele.
+- Depois do consentimento, aguarde o retorno (`wait 3000`) antes de ler a tela com `snapshot -i`: logo após o redirecionamento a página ainda está carregando.
 - **Verificar:** o app mostra a **navegação lateral** (Dashboard, Conversas...) ou o assistente inicial de criação do workspace. Se continuar na tela do Google ou de login, a etapa não terminou.
 - Alternativa só se o usuário preferir: formulário com nome, e-mail e senha. Quem digita senha e confirma o e-mail é o usuário.
 
