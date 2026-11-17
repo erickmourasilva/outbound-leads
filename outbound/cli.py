@@ -185,7 +185,7 @@ def cmd_doctor(_args) -> int:
         total = con.execute("SELECT COUNT(*) FROM leads").fetchone()[0]
     checks.append({"name": "database", "ok": True, "required": True, "detail": db.DB_PATH, "fix": ""})
     ok = all(c["ok"] for c in checks if c["required"])
-    out({"ok": ok, "ready_to_send": ok and bool(which("agent-browser")), "python": sys.executable, "home": db.HOME, "leads": total, "sending_paused": settings["paused"] == "1",
+    out({"ok": ok, "send_tools_ready": ok and bool(which("agent-browser")), "python": sys.executable, "home": db.HOME, "leads": total, "sending_paused": settings["paused"] == "1",
          "checks": checks,
          "next_steps": (["Configure o atendimento das respostas (obrigatório para enviar): python3 -m outbound replies"] if not blubash.replies_ready(settings)[0] else []) + [
                         "Importe leads: python3 -m outbound import arquivo.csv",

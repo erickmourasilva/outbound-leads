@@ -23,7 +23,7 @@ Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io.
 ## Como conduzir
 
 1. Rode `python3 -m outbound blubash next`. Ele diz a etapa atual, quem age e o que pedir ao usuário.
-2. Execute a etapa pelo navegador, sempre **com janela visível**: `agent-browser --headed --session blubash-setup --session-name blubash-setup open <url>`. Use `snapshot -i` para achar os botões pelo nome na tela.
+2. Execute a etapa pelo navegador, sempre **com janela visível**: `agent-browser --headed --session blubash-setup --session-name blubash-setup open <url>`. Use **a mesma sessão em todas as etapas** (`blubash-setup`); se a janela fechar, retome com o mesmo `--session-name`. Comandos básicos: `open <url>`, `snapshot -i` (lista os botões com `@ref`), `click @ref`, `fill @ref "texto"`, `get url`, `wait 3000`, `screenshot arquivo.png`. Ache os botões pelo nome na tela.
 3. Ao terminar e **confirmar na tela**, registre: `python3 -m outbound blubash done <etapa>`. Repita até `ready: true`.
 4. Comece apresentando em duas frases o que vai acontecer e que o usuário só será chamado nos logins e validações. Não peça permissão a cada clique.
 

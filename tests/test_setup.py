@@ -19,8 +19,8 @@ class SetupTest(unittest.TestCase):
     def test_extraction_ready_even_without_node_or_browser(self):
         code, report = self.run_setup(tempfile.mkdtemp())  # empty PATH: no node, npm or agent-browser
         self.assertEqual(code, 0, report)
-        self.assertTrue(report["ready_to_extract"])
-        self.assertFalse(report["ready_to_send"])
+        self.assertTrue(report["extract_tools_ready"])
+        self.assertFalse(report["send_tools_ready"])
         statuses = {s["step"]: s["status"] for s in report["steps"]}
         self.assertEqual(statuses["node+npm"], "manual")
         self.assertTrue(any("Node" in m for m in report["manual_steps"]))

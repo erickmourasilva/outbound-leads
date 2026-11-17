@@ -30,7 +30,7 @@ cd "<raiz do motor>" && python3 -m outbound setup          # macOS/Linux
 cd "<raiz do motor>" ; py -3 -m outbound setup             # Windows (ou: python -m outbound setup)
 ```
 
-Use `--check` para só verificar, sem instalar nada. **Avise o usuário antes de rodar sem `--check`**, porque ele instala um pacote npm global e baixa o Chrome do `agent-browser`.
+Use `--check` para só verificar: ele não instala nada (apenas cria o banco local vazio em `~/.outbound-leads`, se ainda não existir). Se o `--check` **não listar nada a instalar**, rode o `setup` direto, sem avisar. Se listar, **avise o usuário antes de instalar**, porque o `setup` instala um pacote npm global e baixa o Chrome do `agent-browser`.
 
 | Para quê | Dependência | O que o `setup` faz |
 |---|---|---|
@@ -38,7 +38,7 @@ Use `--check` para só verificar, sem instalar nada. **Avise o usuário antes de
 | Enviar mensagens | Node + npm, `agent-browser`, Chrome | `npm install -g agent-browser` e `agent-browser install` |
 | URL bonita do painel (opcional) | `portless` | `npm install -g portless` (pule com `--no-portless`) |
 
-Leia o JSON de resposta: `ready_to_extract` e `ready_to_send` dizem o que já pode ser feito, e `manual_steps` lista o que o usuário precisa fazer (instalar Python ou Node, permissão de administrador, `sudo agent-browser install --with-deps` no Linux). Não prossiga para o envio enquanto `ready_to_send` for `false`. Depois de resolver, rode o `setup` de novo.
+Leia o JSON de resposta: `extract_tools_ready` e `send_tools_ready` dizem se as **ferramentas** estão instaladas (extrair, enviar), e `manual_steps` lista o que o usuário precisa fazer (instalar Python ou Node, permissão de administrador, `sudo agent-browser install --with-deps` no Linux). Não prossiga para o envio enquanto `send_tools_ready` for `false`. Atenção: isso é só o ambiente. O envio de fato só é liberado quando as respostas têm destino (`python3 -m outbound replies` > `ready_to_send`). Depois de resolver, rode o `setup` de novo.
 
 `python3 -m outbound doctor` mostra o estado a qualquer momento. Se `python3` não existir, use `python` ou `py -3`; o campo `python` do `doctor` traz o interpretador correto.
 
