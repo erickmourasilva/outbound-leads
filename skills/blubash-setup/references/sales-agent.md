@@ -117,7 +117,9 @@ interesse e encerre. Nunca insista.
 1. **Produto e oferta:** o que é, para quem, principais benefícios, como funciona, diferenciais.
 2. **Perguntas e objeções reais:** pergunta e resposta, uma por parágrafo, no tom da marca.
 3. **O que NÃO pode ser dito:** preço, prazos, garantias e clientes que não podem ser citados (as respostas da pergunta 5).
-4. **Site** da empresa como fonte adicional, se houver.
+4. **Site** da empresa como fonte adicional, se houver. Se o usuário só deu o site, escreva o bloco 2 a partir do que o site mostra e avise que vale complementar depois com perguntas reais.
+
+Antes de criar o agente, garanta que o pipeline tem um **motivo de perda** que corresponde à perda definida no `brief` (ex.: "Sem interesse"): acrescente-o se o modelo não tiver, porque o agente só usa motivos cadastrados.
 
 ## Habilidades
 

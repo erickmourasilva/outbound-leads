@@ -23,7 +23,7 @@ Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io.
 ## Como conduzir
 
 1. Rode `python3 -m outbound blubash next`. Ele diz a etapa atual, quem age e o que pedir ao usuário.
-2. Execute a etapa pelo navegador, sempre **com janela visível**: `agent-browser --headed --session blubash-setup --session-name blubash-setup open <url>`. Use **a mesma sessão em todas as etapas** (`blubash-setup`); se a janela fechar, retome com o mesmo `--session-name`. Comandos básicos: `open <url>`, `snapshot -i` (lista os botões com `@ref`), `click @ref`, `fill @ref "texto"`, `get url`, `wait 3000`, `screenshot arquivo.png`. Ache os botões pelo nome na tela.
+2. Execute a etapa pelo navegador, sempre **com janela visível**: `agent-browser --headed --session blubash-setup --session-name blubash-setup open <url>`. Use **a mesma sessão em todas as etapas** (`blubash-setup`); se a janela fechar, retome com o mesmo `--session-name`. Comandos básicos: `open <url>`, `snapshot -i` (lista os botões com `@ref`), `click @ref`, `fill @ref "texto"`, `scrollintoview @ref` (use antes de clicar em botões que ficam abaixo de campos grandes), `press Escape`, `get url`, `wait 3000`, `screenshot arquivo.png` e `eval "document.body.innerText"` para ler o texto visível. Ache os botões pelo nome na tela. Os `@ref` mudam a cada diálogo ou passo: refaça o `snapshot -i` antes de clicar. Um clique que não rola a tela até o botão pode não fazer nada **sem dar erro**: confirme sempre que a tela mudou.
 3. Ao terminar e **confirmar na tela**, registre: `python3 -m outbound blubash done <etapa>`. Repita até `ready: true`.
 4. Comece pelas perguntas da etapa `brief`, numa única mensagem, e só depois abra o navegador. Apresente antes, em duas frases, o que vai acontecer e que o usuário só será chamado nos logins e validações. Não peça permissão a cada clique.
 
@@ -44,7 +44,7 @@ Sempre que a tela pedir algo que só ele pode dar. Diga em uma frase o que preci
 - **Diálogo de limite** (agentes, canais, pipelines ou créditos) que **bloqueie** a etapa: pare, explique e deixe o usuário escolher.
 - A DM de teste de outra conta (etapa `verify`).
 
-Nunca digite credenciais, nunca contorne CAPTCHA ou bloqueio e nunca marque uma etapa como feita sem ver o resultado na tela.
+Nunca digite credenciais, nunca contorne CAPTCHA ou bloqueio e nunca marque uma etapa como feita sem ver o resultado na tela. **Nunca liste nem imprima o armazenamento do navegador (localStorage, cookies, tokens)**: leia só o texto visível da página. Se uma tela falhar de forma repetida (campo que não habilita, erros), feche o painel, descreva o sintoma ao usuário e pare.
 
 ## O que entregar ao final
 

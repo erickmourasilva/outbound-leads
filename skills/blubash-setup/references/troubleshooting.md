@@ -15,6 +15,9 @@ Consulte a documentação antes de improvisar: https://docs.blubash.io/pt-BR
 | Diálogo de limite de agentes, canais, pipelines ou créditos que bloqueia a etapa | Pare e explique as opções (desativar outro agente, ajustar o plano). A decisão e o pagamento são do usuário. |
 | Faixa de teste de 7 dias | **É esperada. Não pare.** Ignore ou feche e siga o escopo. |
 | Página de pagamento, ou pedido de cartão, CPF/CNPJ ou endereço fiscal | Pare. O usuário decide e paga. Você nunca preenche esses dados. |
+| "Testar Agente" com o campo desabilitado ou com erros repetidos | Feche o painel, pare e chame o usuário. Não pule a etapa sozinho: o usuário decide se segue sem o teste e volta a ele depois. |
+| Um clique não faz nada e não dá erro | O botão estava fora da tela: use `scrollintoview @ref` antes do `click` e confirme que a tela mudou. |
+| Dois workspaces com nome parecido | O workspace atual aparece destacado no seletor de workspaces (menu do avatar). Confirme qual é antes de criar qualquer coisa. |
 | Transferência não acontece | A equipe de destino precisa ter acesso ao canal do Instagram. |
 | Treinamento "Falhou" | Remova o item e adicione de novo. Se persistir, simplifique o conteúdo e tente outra vez. |
 | Login do Google pede verificação extra | É com o usuário. Aguarde, sem tentar contornar. |

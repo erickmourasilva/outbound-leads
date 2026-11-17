@@ -157,6 +157,12 @@ def cmd_blubash(args) -> int:
                           "O banner de teste de 7 dias é esperado: ignore ou feche e siga o escopo. Pare só para "
                           "pagamento, dados fiscais ou um diálogo de limite que bloqueie a etapa.")})
         return 0
+    if getattr(args, "short", False):
+        nxt = st["next"]
+        out({"ok": True, "progress": st["progress"], "ready": st["ready"],
+             "done": [s["id"] for s in st["stages"] if s["done"]],
+             "next": {k: nxt[k] for k in ("id", "title", "needs_user", "user_action")} if nxt else None})
+        return 0
     out({"ok": True, "app": blubash.APP, "signup": blubash.SIGNUP_URL, **st})
     return 0
 
@@ -483,7 +489,9 @@ def build_parser() -> argparse.ArgumentParser:
     bb = sub.add_parser("blubash", help="setup guiado da BluBash (conta, agente, Instagram)")
     bb_sub = bb.add_subparsers(dest="action")
     bb.set_defaults(fn=cmd_blubash, action="status")
-    bb_sub.add_parser("status").set_defaults(fn=cmd_blubash, action="status")
+    bbs = bb_sub.add_parser("status")
+    bbs.add_argument("--short", action="store_true", help="resposta curta: progresso, feitas e próxima etapa")
+    bbs.set_defaults(fn=cmd_blubash, action="status")
     bb_sub.add_parser("next").set_defaults(fn=cmd_blubash, action="next")
     bbd = bb_sub.add_parser("done")
     bbd.add_argument("stage", choices=[*blubash.STAGE_IDS, "all"], help="etapa, ou all para quem já tem tudo configurado")

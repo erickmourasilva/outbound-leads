@@ -173,6 +173,13 @@ class RepliesTest(unittest.TestCase):
         self.assertEqual(done["next"]["id"], "account")
         self.cli("blubash", "brief", "nao_existe=1", expect=2)
 
+    def test_status_short_is_compact(self):
+        self.cli("blubash", "done", "brief")
+        short = self.cli("blubash", "status", "--short")
+        self.assertEqual(set(short), {"ok", "progress", "ready", "done", "next"})
+        self.assertEqual(short["done"], ["brief"])
+        self.assertEqual(short["next"]["id"], "account")
+
     def test_reset_restarts_the_setup(self):
         self.cli("blubash", "done", "account")
         self.assertEqual(self.cli("blubash", "reset")["progress"], "0/11")
