@@ -14,11 +14,11 @@ Para cada etapa: **Agente** é o que você faz, **Usuário** é o que só ele fa
 ## 2. `workspace`: criar o workspace
 
 - **Agente:** se o app pedir para criar ou escolher um workspace, escolha **criar um novo** e use o nome da empresa (se ainda não tiver, pergunte só o nome da empresa). Confirme.
-- **Verificar:** o Dashboard abre com o nome do workspace. Se aparecer aviso de teste ou assinatura, siga a regra de parada (a decisão e o pagamento são do usuário).
+- **Verificar:** o Dashboard abre com o nome do workspace. A faixa de **teste de 7 dias** é esperada: ignore ou feche e siga. Não clique em ativar assinatura.
 
 ## 3. `brief`: dados da empresa
 
-- **Agente:** faça as 6 perguntas de `sales-agent.md`, uma mensagem só, e grave cada resposta: `python3 -m outbound blubash brief company="..." offer="..." ...`.
+- **Agente:** faça as 7 perguntas de `sales-agent.md`, uma mensagem só, e grave cada resposta: `python3 -m outbound blubash brief company="..." offer="..." ...`.
 - **Verificar:** `python3 -m outbound blubash brief` sem itens em `missing` (o `faq` pode ser o site).
 
 ## 4. `crm_base`: equipe, etiquetas e pipeline
@@ -28,8 +28,8 @@ Documentação: `pt-BR/pipelines/create-pipeline`, `pt-BR/account-settings/creat
 - **Agente:**
   1. Confirme que existe uma **equipe** (a do workspace serve) e anote o nome: ela será a Equipe Padrão do canal e o destino das transferências.
   2. Em **Etiquetas**, crie: `outbound`, `outbound-interessado`, `outbound-quente`, `nao-contatar`.
-  3. Em **Pipelines**, crie um pipeline de vendas (use o modelo de Vendas se houver) com as etapas: Novo lead, Qualificação, Proposta, Negociação, Ganho, Perdido, vinculado à equipe.
-- **Verificar:** etiquetas e pipeline aparecem nas listas.
+  3. Em **Pipelines** → **Novo pipeline**, escolha o **modelo Vendas**, dê o nome (ex.: "Outbound") e vincule à equipe. Mantenha as etapas e os **motivos de Ganho e de Perda** do modelo. **Anote os nomes reais** da primeira etapa, da etapa de qualificação e dos motivos de perda: o Comportamento do agente vai usá-los.
+- **Verificar:** etiquetas e pipeline aparecem nas listas, com etapas de Ganho e de Perdido e motivos cadastrados.
 
 ## 5. `agent`: criar o agente de vendas
 
@@ -56,7 +56,7 @@ Documentação: `pt-BR/ai-agents/configure-skills`.
 - **Agente:** na aba de habilidades, adicione e **dê um nome claro e descritivo** a cada uma, com orientação curta de quando usar e quando não usar:
   - uma de **adicionar etiqueta** para cada etiqueta (interessado, quente, não contatar);
   - **transferir para equipe**, apontando para a equipe comercial, que precisa ter acesso ao canal do Instagram;
-  - **gerenciar negócios**, com o pipeline, as etapas iniciais liberadas para criar e mover e **sem** permitir ganho ou perda;
+  - **gerenciar negócios**, com o pipeline de vendas, todas as etapas em aberto liberadas para criar e mover, e **permitindo ganho e perda**: o agente fecha como **Perdido** quem for desqualificado e como **Ganho** só quando a condição de ganho do `brief` acontecer (regras no Comportamento);
   - manter ativas a nota interna e a atualização de contato.
 - **Verificar:** as habilidades listadas e salvas.
 
@@ -64,8 +64,8 @@ Documentação: `pt-BR/ai-agents/configure-skills`.
 
 Documentação: `pt-BR/ai-agents/test-ai-agent`.
 
-- **Agente:** em **Testar Agente**, rode estes cenários e leia as respostas: (1) "oi, vi sua mensagem, do que se trata?"; (2) pergunta de preço; (3) "já uso outra ferramenta"; (4) "agora não"; (5) "pare de me mandar mensagem". Ajuste o Comportamento se o agente inventar algo, fizer várias perguntas de uma vez ou ignorar um pedido para parar.
-- **Verificar:** os cinco cenários com resposta curta, correta e dentro dos limites.
+- **Agente:** em **Testar Agente**, rode estes cenários e leia as respostas: (1) "oi, vi sua mensagem, do que se trata?"; (2) pergunta de preço; (3) "já uso outra ferramenta"; (4) "agora não"; (5) "pare de me mandar mensagem"; (6) um lead claramente fora do perfil; (7) um lead que aceita avançar. Ajuste o Comportamento se o agente inventar algo, fizer várias perguntas de uma vez ou ignorar um pedido para parar.
+- **Verificar:** os sete cenários com resposta curta, correta e dentro dos limites, e com o negócio sendo perdido ou ganho nos casos certos (no teste as ações aparecem como simuladas).
 
 ## 9. `channel`: conectar o Instagram
 

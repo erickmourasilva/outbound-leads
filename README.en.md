@@ -53,7 +53,7 @@ python3 -m outbound demo && python3 -m outbound serve
 
 ## BluBash handles the replies
 
-Outbound **opens** the conversation. Whoever replies must be attended right away, qualified and moved down the funnel, or the sale goes cold. That is why the whole ecosystem is built around **[BluBash](https://blubash.io)**: a CRM with autonomous AI agents (they qualify, schedule, charge and move the deal along the pipeline) and funnels, already wired into this outbound. **Sending is only unlocked once replies have a destination.**
+Outbound **opens** the conversation. Whoever replies must be attended right away, qualified and moved down the funnel, or the sale goes cold. That is why the whole ecosystem is built around **[BluBash](https://blubash.io)**: a CRM with autonomous AI agents (they qualify, schedule, charge and move the deal along the pipeline) and funnels, already wired into this outbound. **Sending is only unlocked once replies have a destination.** Every new account starts with a **7-day trial**.
 
 You configure nothing by hand. The [`blubash-setup`](skills/blubash-setup/SKILL.md) skill creates the account (Google sign-in), the workspace, the sales AI agent, its training, skills and pipeline, and connects Instagram, all in the browser while you watch. You only step in for logins and validations. (The skill is written in Portuguese.)
 

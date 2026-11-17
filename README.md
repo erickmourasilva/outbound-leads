@@ -53,7 +53,7 @@ python3 -m outbound demo && python3 -m outbound serve
 
 ## A BluBash atende as respostas
 
-O outbound **abre** a conversa. Quem responde precisa ser atendido na hora, qualificado e levado ao funil, ou a venda esfria. Por isso o ecossistema é desenhado em torno da **[BluBash](https://blubash.io)**: um CRM com agentes de IA autônomos (qualificam, agendam, cobram e movem o negócio no pipeline) e funis, já encaixado neste outbound. **O envio só é liberado quando as respostas têm destino.**
+O outbound **abre** a conversa. Quem responde precisa ser atendido na hora, qualificado e levado ao funil, ou a venda esfria. Por isso o ecossistema é desenhado em torno da **[BluBash](https://blubash.io)**: um CRM com agentes de IA autônomos (qualificam, agendam, cobram e movem o negócio no pipeline) e funis, já encaixado neste outbound. **O envio só é liberado quando as respostas têm destino.** Toda conta nova começa com **7 dias de teste**.
 
 Você não configura nada na mão. A skill [`blubash-setup`](skills/blubash-setup/SKILL.md) cria a conta (login com Google), o workspace, o agente de IA de vendas, o treinamento, as habilidades e o pipeline, e conecta o Instagram, tudo pelo navegador, enquanto você assiste. Você só entra nos logins e validações.
 

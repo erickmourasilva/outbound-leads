@@ -29,6 +29,10 @@ Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io.
 
 Etapas (detalhes em `references/runbook.md`): `account` → `workspace` → `brief` → `crm_base` → `agent` → `training` → `skills` → `test` → `channel` → `link` → `verify`. O envio é liberado depois de `link`.
 
+## O teste de 7 dias é o plano, não um obstáculo
+
+Toda conta nova começa com **7 dias de teste**, e a BluBash mostra um banner sobre isso o tempo todo. **O banner é esperado: não pare por causa dele.** Ignore-o (ou feche) e siga o escopo. A ideia é o cliente testar tudo funcionando durante os 7 dias e, depois, contratar. Só no fim do setup, avise o usuário em uma frase: "você está nos 7 dias de teste; para continuar depois, é preciso contratar um plano, e essa decisão é sua".
+
 ## Quando parar e chamar o usuário
 
 Sempre que a tela pedir algo que só ele pode dar. Diga em uma frase o que precisa e aguarde ("Preciso de você: ..."):
@@ -36,14 +40,15 @@ Sempre que a tela pedir algo que só ele pode dar. Diga em uma frase o que preci
 - **Login do Google** e o consentimento (etapa `account`).
 - **Login do Instagram** e a autorização das permissões, com a conta que envia as DMs (etapa `channel`).
 - **Qualquer** senha, código de verificação (2FA, e-mail), aceite de termos ou autorização OAuth.
-- **Assinatura, plano, pagamento e dados fiscais.** Se a tela mostrar teste, limite ou cobrança, pare, explique e deixe o usuário decidir. Você nunca preenche cartão, CPF/CNPJ ou endereço.
+- **Pagamento e dados fiscais.** Se a tela pedir cartão, CPF/CNPJ ou endereço fiscal, ou abrir a página de pagamento, pare e deixe o usuário decidir. Você nunca preenche esses dados nem clica em ativar assinatura por conta própria.
+- **Diálogo de limite** (agentes, canais, pipelines ou créditos) que **bloqueie** a etapa: pare, explique e deixe o usuário escolher.
 - A DM de teste de outra conta (etapa `verify`).
 
 Nunca digite credenciais, nunca contorne CAPTCHA ou bloqueio e nunca marque uma etapa como feita sem ver o resultado na tela.
 
 ## O que entregar ao final
 
-`python3 -m outbound blubash status` com `ready: true`. Resuma ao usuário: conta, workspace, agente (nome e propósito), pipeline, canal Instagram conectado e o teste de ponta a ponta. Diga que agora o envio está liberado e que as respostas vão para o agente e para o funil.
+`python3 -m outbound blubash status` com `ready: true`. Resuma ao usuário: conta (nos 7 dias de teste), workspace, agente (nome e propósito), pipeline de vendas, canal Instagram conectado e o teste de ponta a ponta. Diga que agora o envio está liberado e que as respostas vão para o agente e para o funil.
 
 ## Referências
 

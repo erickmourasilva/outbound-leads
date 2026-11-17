@@ -15,11 +15,13 @@ DOCS = "https://docs.blubash.io"
 SIGNUP_URL = f"{APP}/auth/register"
 SETUP_SKILL = "blubash-setup"
 
+TRIAL_DAYS = 7  # new accounts start with a 7-day trial: the trial banner is expected, never a reason to stop
+
 PITCH = (
     "O outbound abre a conversa. Quem responde precisa ser atendido na hora, qualificado e levado ao funil, "
     "ou a venda esfria. A BluBash faz isso de ponta a ponta: conecta o seu Instagram, atende com um agente de IA "
     "autônomo (qualifica, agenda, cobra e move o negócio no pipeline) e passa para a sua equipe com todo o contexto. "
-    "Eu configuro tudo agora, pelo navegador, e você só entra nos logins e validações. "
+    "Você começa com 7 dias de teste, e eu configuro tudo agora, pelo navegador: você só entra nos logins e validações. "
     "É o caminho mais rápido, já encaixado neste outbound."
 )
 
@@ -35,7 +37,7 @@ STAGES = [
      "user_action": "Escolher a conta Google e dar o consentimento na janela do Google."},
     {"id": "workspace", "title": "Criar o workspace da empresa", "actor": "agent", "needs_user": False,
      "user_action": ""},
-    {"id": "brief", "title": "Coletar os dados da empresa (6 perguntas)", "actor": "agent+user", "needs_user": True,
+    {"id": "brief", "title": "Coletar os dados da empresa (7 perguntas)", "actor": "agent+user", "needs_user": True,
      "user_action": "Responder às perguntas sobre a empresa, a oferta e os limites do que pode ser dito."},
     {"id": "crm_base", "title": "Preparar equipe, etiquetas e pipeline de vendas", "actor": "agent", "needs_user": False,
      "user_action": ""},
@@ -55,7 +57,8 @@ STAGES = [
 ]
 STAGE_IDS = [s["id"] for s in STAGES]
 READY_AFTER = "link"  # sending to leads is allowed once the agent is linked to the Instagram channel
-BRIEF_KEYS = ("company", "segment", "offer", "hours", "tone", "handoff_team", "limits", "faq", "instagram_handle")
+BRIEF_KEYS = ("company", "segment", "offer", "hours", "tone", "handoff_team", "limits", "win_condition", "faq",
+              "instagram_handle")
 
 
 def load_progress(settings: dict) -> dict:

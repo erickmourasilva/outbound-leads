@@ -2,16 +2,17 @@
 
 Quem responde a uma DM de prospecção **não pediu para ser atendido**. O agente certo é curioso, leve e útil: responde primeiro, pergunta depois e só passa para uma pessoa quando há interesse. Esta é a configuração recomendada.
 
-## As 6 perguntas (faça todas numa única mensagem)
+## As 7 perguntas (faça todas numa única mensagem)
 
 1. **Empresa e segmento:** o nome, o que faz e para quem?
 2. **Oferta:** em uma frase, o que você vende e qual o principal diferencial?
 3. **Atendimento humano:** quem assume a conversa (nome da equipe) e em que horário?
 4. **Tom:** formal, normal ou descontraído? Como a marca fala?
 5. **Limites:** o que o agente **não pode** dizer ou prometer (preço, prazo, desconto, garantia, clientes citados)?
-6. **Conhecimento:** site, ou 5 a 10 perguntas e objeções que você mais ouve, para o treinamento.
+6. **Ganho e perda:** o que conta como **ganho** (ex.: reunião agendada, proposta aceita, venda fechada) e em que casos o negócio deve ser **dado como perdido** (ex.: fora do perfil, sem interesse, já tem solução)?
+7. **Conhecimento:** site, ou 5 a 10 perguntas e objeções que você mais ouve, para o treinamento.
 
-Grave com `python3 -m outbound blubash brief company="..." segment="..." offer="..." handoff_team="..." hours="..." tone="..." limits="..." faq="..." instagram_handle="..."`.
+Grave com `python3 -m outbound blubash brief company="..." segment="..." offer="..." handoff_team="..." hours="..." tone="..." limits="..." win_condition="..." faq="..." instagram_handle="..."`.
 
 ## Configuração
 
@@ -25,7 +26,7 @@ Grave com `python3 -m outbound blubash brief company="..." segment="..." offer="
 
 ## Modelo de "Comportamento"
 
-Preencha os campos entre colchetes com o `brief` e os nomes reais de equipe, etiquetas e etapas. Tem cerca de 3.000 caracteres (o limite do campo é 5.000). Sem markdown: o Instagram mostra texto simples.
+Preencha os campos entre colchetes com o `brief` e com os **nomes reais** de equipe, etiquetas, etapas e motivos de perda do pipeline que você criou (modelo Vendas). `[etapa inicial]` é a primeira etapa em aberto e `[etapa de qualificação]` é a etapa em que o lead já foi entendido. Tem cerca de 3.800 caracteres (o limite do campo é 5.000). Sem markdown: o Instagram mostra texto simples.
 
 ```
 QUEM VOCÊ É
@@ -72,10 +73,20 @@ Nunca peça senha, cartão ou documentos e nunca invente dados da pessoa.
 ETIQUETAS E FUNIL
 Interesse real: aplique "outbound-interessado". Perfil A: aplique
 "outbound-quente". Antes de criar um negócio, veja se o contato já tem um
-aberto e use o mesmo. Sem negócio e com interesse, crie na etapa "Novo lead".
-Quando souber o segmento, a empresa e a dor, mova para "Qualificação". Nunca
-mova para uma etapa anterior. Atualize os dados do contato ao saber de algo.
-Não comente que está registrando.
+aberto e use o mesmo. Sem negócio e com interesse, crie na etapa
+"[etapa inicial]". Quando souber o segmento, a empresa e a dor, mova para
+"[etapa de qualificação]". Nunca mova para uma etapa anterior. Atualize os
+dados do contato ao saber de algo. Não comente que está registrando.
+
+GANHO E PERDA (INCLUSIVE DESQUALIFICAR)
+Você pode fechar negócios, com disciplina. Marque como PERDIDO, escolhendo o
+motivo cadastrado que mais se aproxima (nunca invente um motivo), quando: o
+lead for perfil C e a conversa mostrar que não há encaixe; disser que não
+tem interesse ou pedir para parar; ou [outros casos de perda do cliente].
+"Agora não" não é perda: deixe uma nota com o melhor momento e mantenha o
+negócio aberto. Marque como GANHO somente quando [condição de ganho] acontecer
+e o lead confirmar com clareza. Na dúvida, não feche: transfira para a equipe.
+Antes de fechar de qualquer forma, deixe uma nota curta com o motivo.
 
 QUANDO PASSAR PARA A EQUIPE
 Transfira se a pessoa pedir preço insistentemente, proposta, reunião ou
@@ -91,7 +102,8 @@ Não venda. Registre uma nota e transfira para [suporte ou financeiro].
 PARAR
 Se a pessoa pedir para parar, disser que não tem interesse ou reclamar do
 contato: peça desculpas em uma frase, confirme que não vai mais escrever,
-aplique "nao-contatar" e encerre. Nunca insista.
+aplique "nao-contatar", marque o negócio como perdido pelo motivo de falta de
+interesse e encerre. Nunca insista.
 ```
 
 ## Treinamento (como texto, blocos separados por assunto)
@@ -111,5 +123,5 @@ Nomes claros e orientação curta de quando usar e quando não usar:
 | Etiqueta: lead quente | Aplicar `outbound-quente` no perfil A |
 | Etiqueta: não contatar | Aplicar `nao-contatar` quando a pessoa pedir para parar |
 | Transferir para o comercial | Passar para a equipe comercial nas situações do Comportamento |
-| Funil de vendas | Criar e mover negócios nas etapas iniciais, **sem** ganho ou perda |
+| Funil de vendas | Criar e mover negócios em todas as etapas em aberto, **permitindo ganho e perda** (desqualificar quem não encaixa) |
 | Nota interna e atualização de contato | Mantidas ativas |

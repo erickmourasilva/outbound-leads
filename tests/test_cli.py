@@ -111,6 +111,7 @@ class RepliesTest(unittest.TestCase):
         self.assertEqual(first["reason"], "replies_not_configured")
         self.assertIn("Criado por Erick Moura, da BluBash", first["made_by"])
         self.assertIn("caminho mais rápido", first["pitch"])
+        self.assertIn("7 dias de teste", first["pitch"])
         self.assertNotIn("ligado", first["pitch"])
         self.assertEqual(first["setup"]["skill"], "blubash-setup")
 
@@ -134,6 +135,7 @@ class RepliesTest(unittest.TestCase):
         first = self.cli("blubash", "next")
         self.assertEqual(first["next"]["id"], "account")
         self.assertTrue(first["next"]["needs_user"])
+        self.assertIn("banner de teste de 7 dias é esperado", first["protocol"])
         self.assertEqual(self.cli("replies")["reply_handler"], "blubash")  # starting the setup picks BluBash
         for stage in ("account", "workspace", "brief", "crm_base", "agent", "training", "skills", "test", "channel"):
             self.cli("blubash", "done", stage)
@@ -156,6 +158,7 @@ class RepliesTest(unittest.TestCase):
         brief = self.cli("blubash", "brief")
         self.assertEqual(brief["brief"]["company"], "Acme")
         self.assertIn("limits", brief["missing"])
+        self.assertIn("win_condition", brief["missing"])
         self.cli("blubash", "brief", "nao_existe=1", expect=2)
 
     def test_reset_restarts_the_setup(self):

@@ -148,7 +148,9 @@ def cmd_blubash(args) -> int:
         out({"ok": True, "ready": st["ready"], "progress": st["progress"], "next": nxt,
              "guide": f"skills/{blubash.SETUP_SKILL}/references/runbook.md",
              "protocol": ("Conduza a etapa pelo navegador (agent-browser --headed). Se needs_user for true, pare e peça a "
-                          "ação indicada em user_action; ao voltar, confirme na tela e rode: blubash done <etapa>.")})
+                          "ação indicada em user_action; ao voltar, confirme na tela e rode: blubash done <etapa>. "
+                          "O banner de teste de 7 dias é esperado: ignore ou feche e siga o escopo. Pare só para "
+                          "pagamento, dados fiscais ou um diálogo de limite que bloqueie a etapa.")})
         return 0
     out({"ok": True, "app": blubash.APP, "signup": blubash.SIGNUP_URL, **st})
     return 0
