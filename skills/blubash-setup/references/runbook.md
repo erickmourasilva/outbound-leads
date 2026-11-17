@@ -80,15 +80,17 @@ Documentação: `pt-BR/ai-agents/configure-skills`.
 Documentação: `pt-BR/ai-agents/test-ai-agent`.
 
 - **Agente:** em **Testar Agente**, rode estes cenários e leia as respostas: (1) "oi, vi sua mensagem, do que se trata?"; (2) pergunta de preço; (3) "já uso outra ferramenta"; (4) "agora não"; (5) "pare de me mandar mensagem"; (6) um lead claramente fora do perfil; (7) um lead que aceita avançar. Ajuste o Comportamento se o agente inventar algo, fizer várias perguntas de uma vez ou ignorar um pedido para parar.
-- **Se o campo "Digite sua mensagem..." ficar desabilitado ou a tela falhar:** feche o painel (para parar as tentativas), **pare e chame o usuário**. Não marque a etapa como feita nem pule sozinho. O usuário pode autorizar a seguir sem o teste e voltar a ele depois do canal; o envio não depende desta etapa.
+- **Se o campo "Digite sua mensagem..." ficar desabilitado ou a tela falhar:** feche o painel (para parar as tentativas), **pare e chame o usuário**. Não marque a etapa como feita nem pule sozinho. O usuário pode autorizar a seguir sem o teste e voltar a ele depois do canal; o envio não depende desta etapa (o envio só exige `link`). Se ele autorizar, rode `python3 -m outbound blubash defer test --reason "..."`: a etapa é pulada pelo `next`, **não** conta como feita e o progresso não é inflado. Para retomar: `blubash undefer test` e conclua com `blubash done test`.
 - **Verificar:** os sete cenários com resposta curta, correta e dentro dos limites, e com o negócio sendo perdido ou ganho nos casos certos (no teste as ações aparecem como simuladas).
 
 ## 9. `channel`: conectar o Instagram
 
 Documentação: `pt-BR/channels/configure-instagram`. Precisa de conta **profissional** do Instagram, e deve ser a **mesma conta que envia as DMs**: as respostas chegam ao Direct dela.
 
-- **Agente:** **Canais** → **Adicionar Canal** → **Instagram**. Informe o nome do canal e a **Equipe Padrão**. Clique em **Criar Canal** e depois em **Conectar com Instagram**. Libere pop-ups se o navegador bloquear.
-- **Usuário:** na janela do Instagram, fazer login e autorizar. Peça: "Preciso de você: entre no Instagram com a conta que envia as DMs e autorize."
+- **Antes:** garanta uma janela larga com `agent-browser set viewport 1280 900`. Com a janela estreita, o menu lateral vira um ícone de hambúrguer (o botão **Canais** some do `snapshot`) e os diálogos podem fechar sozinhos.
+- **Agente:** **Canais** → **Adicionar Canal** → cartão **Instagram**. Se o `snapshot -i` mostrar só o título "Instagram", use `snapshot -i -C` para achar o **cartão clicável**. Informe o nome do canal e a **Equipe Padrão** (o agente pode ficar sem atribuição por ora: você o vincula na etapa `link`). Clique em **Criar Canal** e, no passo seguinte, em **Conectar com Instagram**. **Não use "Pular por enquanto"**: ele deixa o canal sem conta ligada e sem receber mensagens.
+- O **Conectar com Instagram** abre uma **nova aba** (não uma janela separada). O foco passa para ela (`tab list`, `tab <n>`). Depois do login, a aba do Instagram fecha ou volta e o app segue na aba original.
+- **Usuário:** na aba do Instagram, fazer login e autorizar. Peça: "Preciso de você: na aba do Instagram que abri, entre com a conta que envia as DMs e autorize." Diga qual aba está ativa.
 - **Verificar:** "Instagram conectado com sucesso", selo **Conectado** e o nome de usuário igual ao da conta que envia.
 
 ## 10. `link`: ativar e vincular

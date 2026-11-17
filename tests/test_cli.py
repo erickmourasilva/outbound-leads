@@ -169,14 +169,31 @@ class RepliesTest(unittest.TestCase):
         self.assertIn("win_condition", brief["missing"])
         self.assertIn("agent_name", brief["missing"])
         done = self.cli("blubash", "done", "brief")  # short answer, not the whole status
-        self.assertEqual(set(done), {"ok", "action", "stage", "progress", "ready", "next"})
+        self.assertEqual(set(done), {"ok", "action", "stage", "progress", "ready", "deferred", "next"})
         self.assertEqual(done["next"]["id"], "account")
         self.cli("blubash", "brief", "nao_existe=1", expect=2)
+
+    def test_deferred_stage_is_skipped_but_never_counts_as_done(self):
+        for stage in ("brief", "account", "workspace", "crm_base", "agent", "training", "skills"):
+            self.cli("blubash", "done", stage)
+        self.assertEqual(self.cli("blubash", "next")["next"]["id"], "test")
+        self.cli("blubash", "defer", "test", expect=2)  # a reason is mandatory
+        deferred = self.cli("blubash", "defer", "test", "--reason", "back de teste fora do ar; usuário autorizou")
+        self.assertEqual(deferred["next"]["id"], "channel")  # moves on
+        short = self.cli("blubash", "status", "--short")
+        self.assertEqual(short["progress"], "7/11")  # not inflated
+        self.assertIn("test", short["deferred"])
+        for stage in ("channel", "link"):
+            self.cli("blubash", "done", stage)
+        self.assertTrue(self.cli("blubash", "status", "--short")["ready"])  # test is not required to be ready
+        self.cli("blubash", "defer", "verify", "--reason", "x")
+        self.cli("blubash", "done", "test")  # finishing it clears the deferral
+        self.assertNotIn("test", self.cli("blubash", "status", "--short")["deferred"])
 
     def test_status_short_is_compact(self):
         self.cli("blubash", "done", "brief")
         short = self.cli("blubash", "status", "--short")
-        self.assertEqual(set(short), {"ok", "progress", "ready", "done", "next"})
+        self.assertEqual(set(short), {"ok", "progress", "ready", "done", "deferred", "next"})
         self.assertEqual(short["done"], ["brief"])
         self.assertEqual(short["next"]["id"], "account")
 

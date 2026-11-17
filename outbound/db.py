@@ -91,6 +91,7 @@ DEFAULT_SETTINGS = {
     "timezone": "America/Sao_Paulo",
     "reply_handler": "",                # who attends replies: blubash | other (set via `replies set`)
     "blubash_progress": "{}",           # guided setup progress (see blubash.py)
+    "blubash_deferred": "{}",           # stages postponed by the user, with the reason (not counted as done)
     "blubash_brief": "{}",              # company answers used to configure the agent
 }
 

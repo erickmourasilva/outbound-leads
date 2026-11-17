@@ -79,14 +79,26 @@ def load_brief(settings: dict) -> dict:
         return {}
 
 
+def load_deferred(settings: dict) -> dict:
+    try:
+        data = json.loads(settings.get("blubash_deferred") or "{}")
+        return data if isinstance(data, dict) else {}
+    except json.JSONDecodeError:
+        return {}
+
+
 def status(settings: dict) -> dict:
+    """A deferred stage (postponed by the user, with a reason) is skipped by `next` but is NOT done:
+    `ready` only depends on READY_AFTER, so skipping e.g. the agent test never fakes progress."""
     done = load_progress(settings)
-    stages = [{**s, "done": s["id"] in done, "done_at": done.get(s["id"])} for s in STAGES]
-    pending = [s for s in stages if not s["done"]]
+    deferred = load_deferred(settings)
+    stages = [{**s, "done": s["id"] in done, "done_at": done.get(s["id"]),
+               "deferred": deferred.get(s["id"]) if s["id"] not in done else None} for s in STAGES]
+    pending = [s for s in stages if not s["done"] and not s["deferred"]]
     nxt = pending[0] if pending else None
     ready = READY_AFTER in done
-    return {"ready": ready, "ready_after": READY_AFTER, "progress": f"{len(STAGES) - len(pending)}/{len(STAGES)}",
-            "next": nxt, "stages": stages}
+    return {"ready": ready, "ready_after": READY_AFTER, "progress": f"{len(done)}/{len(STAGES)}",
+            "deferred": {k: v for k, v in deferred.items() if k not in done}, "next": nxt, "stages": stages}
 
 
 def replies_ready(settings: dict) -> tuple[bool, str]:

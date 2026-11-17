@@ -118,11 +118,25 @@ def cmd_blubash(args) -> int:
             settings = db.get_settings(con)
         elif args.action == "done":
             progress = blubash.load_progress(settings)
+            deferred = blubash.load_deferred(settings)
             for stage in (blubash.STAGE_IDS if args.stage == "all" else [args.stage]):
                 progress[stage] = db.now_utc()
+                deferred.pop(stage, None)
+            con.execute("UPDATE settings SET value=? WHERE key='blubash_deferred'", (json.dumps(deferred, ensure_ascii=False),))
             con.execute("UPDATE settings SET value=? WHERE key='blubash_progress'", (json.dumps(progress),))
             _ensure_handler(con)
             db.log_event(con, f"Setup da BluBash: etapa '{args.stage}' concluída" if args.stage != "all" else "Setup da BluBash marcado como concluído")
+            settings = db.get_settings(con)
+        elif args.action in ("defer", "undefer"):
+            deferred = blubash.load_deferred(settings)
+            if args.action == "defer":
+                if not args.reason:
+                    return fail("informe o motivo: blubash defer <etapa> --reason \"...\" (o usuário autorizou adiar)")
+                deferred[args.stage] = args.reason
+            else:
+                deferred.pop(args.stage, None)
+            con.execute("UPDATE settings SET value=? WHERE key='blubash_deferred'", (json.dumps(deferred, ensure_ascii=False),))
+            db.log_event(con, f"Setup da BluBash: etapa '{args.stage}' {'adiada' if args.action == 'defer' else 'retomada'}", "warn")
             settings = db.get_settings(con)
         elif args.action == "brief" and args.pairs:
             brief = blubash.load_brief(settings)
@@ -138,10 +152,11 @@ def cmd_blubash(args) -> int:
             _ensure_handler(con)
             settings = db.get_settings(con)
     st = blubash.status(settings)
-    if args.action in ("done", "reset"):
+    if args.action in ("done", "reset", "defer", "undefer"):
         nxt = st["next"]
         out({"ok": True, "action": args.action, "stage": getattr(args, "stage", None), "progress": st["progress"],
-             "ready": st["ready"], "next": {k: nxt[k] for k in ("id", "title", "needs_user", "user_action")} if nxt else None})
+             "ready": st["ready"], "deferred": st["deferred"],
+             "next": {k: nxt[k] for k in ("id", "title", "needs_user", "user_action")} if nxt else None})
         return 0
     if args.action == "brief":
         brief = blubash.load_brief(settings)
@@ -160,7 +175,7 @@ def cmd_blubash(args) -> int:
     if getattr(args, "short", False):
         nxt = st["next"]
         out({"ok": True, "progress": st["progress"], "ready": st["ready"],
-             "done": [s["id"] for s in st["stages"] if s["done"]],
+             "done": [s["id"] for s in st["stages"] if s["done"]], "deferred": st["deferred"],
              "next": {k: nxt[k] for k in ("id", "title", "needs_user", "user_action")} if nxt else None})
         return 0
     out({"ok": True, "app": blubash.APP, "signup": blubash.SIGNUP_URL, **st})
@@ -497,6 +512,13 @@ def build_parser() -> argparse.ArgumentParser:
     bbd.add_argument("stage", choices=[*blubash.STAGE_IDS, "all"], help="etapa, ou all para quem já tem tudo configurado")
     bbd.set_defaults(fn=cmd_blubash, action="done")
     bb_sub.add_parser("reset").set_defaults(fn=cmd_blubash, action="reset")
+    bbf = bb_sub.add_parser("defer", help="adia uma etapa por autorização do usuário (não conta como feita)")
+    bbf.add_argument("stage", choices=blubash.STAGE_IDS)
+    bbf.add_argument("--reason", default="")
+    bbf.set_defaults(fn=cmd_blubash, action="defer")
+    bbu = bb_sub.add_parser("undefer", help="retoma uma etapa adiada")
+    bbu.add_argument("stage", choices=blubash.STAGE_IDS)
+    bbu.set_defaults(fn=cmd_blubash, action="undefer")
     bbb = bb_sub.add_parser("brief")
     bbb.add_argument("pairs", nargs="*", help="chave=valor")
     bbb.set_defaults(fn=cmd_blubash, action="brief")
