@@ -5,10 +5,10 @@
   "description": "Projeto pessoal do Erick: outbound e extração de leads, com disparo gradual de mensagens e painel local.",
   "packageManager": "pnpm@10.34.7",
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   },
   "scripts": {
-    "setup": "./setup.sh",
+    "setup": "python3 -m outbound setup",
     "doctor": "python3 -m outbound doctor",
     "dev": "portless outbound-leads python3 -m outbound serve",
     "serve": "python3 -m outbound serve",

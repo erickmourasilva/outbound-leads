@@ -21,11 +21,20 @@ Depois peça, por exemplo: "use o outbound-leads para extrair parceiros dos conc
 
 ```bash
 git clone https://github.com/erickmourasilva/outbound-leads && cd outbound-leads
-./setup.sh                  # verifica o ambiente e cria o banco local
+./setup.sh                  # instala o que falta e cria o banco local (Windows: .\setup.ps1)
 python3 -m outbound serve   # painel em http://127.0.0.1:8787
 ```
 
-Requisitos: Python 3.11+ (só biblioteca padrão). Para enviar mensagens, `agent-browser` (`npm install -g agent-browser`). Opcionais: pnpm e `portless` (URL `https://outbound-leads.localhost` com `pnpm dev`).
+O `setup` é idempotente e o mesmo comando serve para o agente (`python3 -m outbound setup`; `--check` só verifica).
+
+## Compatibilidade
+
+| | Extrair e acompanhar | Enviar mensagens |
+|---|---|---|
+| Requer | Python 3.10+ (biblioteca padrão; `tzdata` no Windows, instalado pelo `setup`) | Node + npm, `agent-browser` e o Chrome dele (o `setup` instala; Node e permissões de administrador são manuais) |
+| macOS, Linux, Windows | testado por CI nos três (Python 3.10, 3.12 e 3.13) | `agent-browser` cobre os três; no Linux pode exigir `sudo agent-browser install --with-deps` |
+
+Opcional: pnpm e `portless` para a URL `https://outbound-leads.localhost` (`pnpm dev`).
 
 ## Onde ficam os dados
 

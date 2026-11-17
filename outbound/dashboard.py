@@ -4,7 +4,7 @@ Run: pnpm dev (https://outbound-leads.localhost via portless) or python3 -m outb
 """
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from zoneinfo import ZoneInfo
 
@@ -18,7 +18,7 @@ def build_state() -> dict:
         today = datetime.now(tz).date()
         # "today" in local time -> UTC window
         start_local = datetime(today.year, today.month, today.day, tzinfo=tz)
-        start_utc = start_local.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%SZ")
+        start_utc = start_local.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         by_status = {r["status"]: r["n"] for r in con.execute("SELECT status, COUNT(*) n FROM leads GROUP BY status")}
         by_kind = {r["kind"]: r["n"] for r in con.execute("SELECT kind, COUNT(*) n FROM leads GROUP BY kind")}
         by_segment = [dict(r) for r in con.execute(

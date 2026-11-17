@@ -17,15 +17,26 @@ Motor local de outbound: **extrair → segmentar → enviar aos poucos → acomp
 
 Os dados ficam em `~/.outbound-leads` (variável `OUTBOUND_HOME`), fora do código. Todo comando abaixo imprime JSON.
 
-## 1. Preparar (faça sozinho)
+## 1. Preparar (faça sozinho, antes de tudo)
 
-O motor está em `<diretório desta skill>/../..`. Entre nele e rode:
+O motor está em `<diretório desta skill>/../..`. Entre nele e rode o setup. Ele instala o que dá para instalar e diz exatamente o que falta:
 
 ```bash
-cd "<raiz do motor>" && python3 -m outbound doctor
+cd "<raiz do motor>" && python3 -m outbound setup          # macOS/Linux
+cd "<raiz do motor>" ; py -3 -m outbound setup             # Windows (ou: python -m outbound setup)
 ```
 
-`doctor` diz o que falta e como corrigir. Só Python 3.11+ é obrigatório (biblioteca padrão). Para **enviar**, o `agent-browser` também é necessário (`npm install -g agent-browser`). `pnpm install` é opcional: dá a URL nomeada do painel via `pnpm dev`.
+Use `--check` para só verificar, sem instalar nada. **Avise o usuário antes de rodar sem `--check`**, porque ele instala um pacote npm global e baixa o Chrome do `agent-browser`.
+
+| Para quê | Dependência | O que o `setup` faz |
+|---|---|---|
+| Extrair e acompanhar leads | Python 3.10+, `tzdata` (Windows), banco local | Instala `tzdata` com pip se faltar e cria o banco |
+| Enviar mensagens | Node + npm, `agent-browser`, Chrome | `npm install -g agent-browser` e `agent-browser install` |
+| URL nomeada do painel (opcional) | pnpm, `portless` | Só com `--with-portless` |
+
+Leia o JSON de resposta: `ready_to_extract` e `ready_to_send` dizem o que já pode ser feito, e `manual_steps` lista o que o usuário precisa fazer (instalar Python ou Node, permissão de administrador, `sudo agent-browser install --with-deps` no Linux). Não prossiga para o envio enquanto `ready_to_send` for `false`. Depois de resolver, rode o `setup` de novo.
+
+`python3 -m outbound doctor` mostra o estado a qualquer momento. Se `python3` não existir, use `python` ou `py -3`; o campo `python` do `doctor` traz o interpretador correto.
 
 Painel ao vivo: `python3 -m outbound serve` (ou `pnpm dev`), em segundo plano. Abra-o numa janela **visível** para o usuário acompanhar.
 
@@ -44,7 +55,8 @@ Painel ao vivo: `python3 -m outbound serve` (ou `pnpm dev`), em segundo plano. A
 
 | Comando | Para quê |
 |---|---|
-| `doctor` | Verifica o ambiente |
+| `setup [--check]` | Instala o que falta (tzdata, agent-browser, Chrome) e lista o que é manual |
+| `doctor` | Estado do ambiente |
 | `import arquivo.csv` / `export` | Entrada e saída em CSV |
 | `leads list [--status S] [--kind K]` / `leads add ...` / `leads set-status <@> <status>` | Gerenciar leads |
 | `next [--limit N]` | **Posso enviar agora?** Retorna `allowed`, motivo, limite do dia, espera e os próximos leads |

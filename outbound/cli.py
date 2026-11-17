@@ -1,5 +1,6 @@
 """outbound-leads CLI. Every command prints JSON so an AI agent can read the result.
 
+  python3 -m outbound setup [--check]            install what is missing (python deps, agent-browser, Chrome)
   python3 -m outbound doctor                     check the environment and say what to fix
   python3 -m outbound init                       create the local database
   python3 -m outbound serve [--port N]           live dashboard on 127.0.0.1
@@ -27,7 +28,7 @@ import sys
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-from . import dashboard, db, schedule
+from . import dashboard, db, schedule, setup_env
 
 CSV_FIELDS = ["kind", "segment", "name", "handle", "source_kind", "source_ref", "source_url", "signal",
               "signal_date", "score", "status", "variant", "message_text", "scheduled_at", "sent_at", "notes"]
@@ -56,16 +57,24 @@ def _parse_utc(value: str | None):
 
 
 # ---------------------------------------------------------------- commands
+def cmd_setup(args) -> int:
+    result = setup_env.run_setup(install=not args.check, with_portless=args.with_portless)
+    out(result)
+    return 0 if result["ok"] else 1
+
+
 def cmd_doctor(_args) -> int:
     def which(name):
         return shutil.which(name)
 
     checks = [
-        {"name": "python>=3.11", "ok": sys.version_info >= (3, 11), "required": True,
-         "detail": platform.python_version(), "fix": "Instale Python 3.11 ou superior (ex.: brew install python)."},
+        {"name": "python>=3.10", "ok": sys.version_info >= (3, 10), "required": True,
+         "detail": platform.python_version(), "fix": "Instale Python 3.10 ou superior."},
+        {"name": "tzdata", "ok": setup_env.tz_ok(), "required": True, "detail": setup_env.TZ_PROBE,
+         "fix": f"{sys.executable} -m pip install --user tzdata  (ou: python3 -m outbound setup)"},
         {"name": "agent-browser", "ok": bool(which("agent-browser")), "required": False,
          "detail": which("agent-browser") or "não encontrado",
-         "fix": "Necessário só para enviar mensagens: npm install -g agent-browser"},
+         "fix": "Necessário só para enviar: python3 -m outbound setup  (instala agent-browser e o Chrome)"},
         {"name": "pnpm", "ok": bool(which("pnpm")), "required": False, "detail": which("pnpm") or "não encontrado",
          "fix": "Opcional (URL nomeada do painel): npm install -g pnpm && pnpm install"},
         {"name": "portless", "ok": bool(which("portless") or os.path.isdir("node_modules/portless")), "required": False,
@@ -77,11 +86,11 @@ def cmd_doctor(_args) -> int:
         total = con.execute("SELECT COUNT(*) FROM leads").fetchone()[0]
     checks.append({"name": "database", "ok": True, "required": True, "detail": db.DB_PATH, "fix": ""})
     ok = all(c["ok"] for c in checks if c["required"])
-    out({"ok": ok, "home": db.HOME, "leads": total, "sending_paused": settings["paused"] == "1",
+    out({"ok": ok, "ready_to_send": ok and bool(which("agent-browser")), "python": sys.executable, "home": db.HOME, "leads": total, "sending_paused": settings["paused"] == "1",
          "checks": checks,
          "next_steps": ["Importe leads: python3 -m outbound import arquivo.csv",
                         "Abra o painel: python3 -m outbound serve",
-                        "Para enviar, instale o agent-browser e siga skills/outbound-leads/references/sending.md"]})
+                        "Para enviar: python3 -m outbound setup e siga skills/outbound-leads/references/sending.md"]})
     return 0 if ok else 1
 
 
@@ -312,6 +321,10 @@ def cmd_seed(args) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="python3 -m outbound", description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
+    su = sub.add_parser("setup")
+    su.add_argument("--check", action="store_true", help="só verifica, não instala nada")
+    su.add_argument("--with-portless", action="store_true", help="instala também pnpm/portless (URL nomeada do painel)")
+    su.set_defaults(fn=cmd_setup)
     sub.add_parser("doctor").set_defaults(fn=cmd_doctor)
     sub.add_parser("init").set_defaults(fn=cmd_init)
     s = sub.add_parser("serve")

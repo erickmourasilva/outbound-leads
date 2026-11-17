@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# Idempotent setup: checks the environment and creates the local database.
+# Idempotent setup (macOS/Linux): installs what is missing and reports what is left to do by hand.
+# Pass --check to only verify. Windows: use setup.ps1.
 set -euo pipefail
 cd "$(dirname "$0")"
-if ! command -v python3 >/dev/null 2>&1; then
-  echo "python3 não encontrado. Instale Python 3.11+ (ex.: brew install python)." >&2
+PY="$(command -v python3 || command -v python || true)"
+if [ -z "$PY" ]; then
+  echo '{"ok": false, "error": "Python não encontrado. Instale Python 3.10+ (ex.: brew install python ou sudo apt install python3)."}' >&2
   exit 1
 fi
-if command -v pnpm >/dev/null 2>&1 && [ -f package.json ]; then
-  pnpm install --silent || echo "pnpm install falhou (opcional); o painel ainda roda com: python3 -m outbound serve"
-fi
-python3 -m outbound doctor
+exec "$PY" -m outbound setup "$@"

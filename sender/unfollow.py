@@ -7,7 +7,7 @@ h = sys.argv[1]
 
 
 def ab(*args):
-    r = subprocess.run(["agent-browser", "--headed", "--session", S, *args], capture_output=True, text=True, cwd="/tmp")
+    r = subprocess.run(["agent-browser", "--headed", "--session", S, *args], capture_output=True, text=True)
     return (r.stdout or "") + (r.stderr or "")
 
 
