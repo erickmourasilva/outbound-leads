@@ -133,7 +133,7 @@ class RepliesTest(unittest.TestCase):
         self.cli("leads", "add", "--kind", "client", "--name", "X", "--handle", "x", "--status", "approved")
         self.open_sending_window()
         first = self.cli("blubash", "next")
-        self.assertEqual(first["next"]["id"], "account")
+        self.assertEqual(first["next"]["id"], "brief")  # questions first, before opening the browser
         self.assertTrue(first["next"]["needs_user"])
         self.assertIn("banner de teste de 7 dias é esperado", first["protocol"])
         self.assertEqual(self.cli("replies")["reply_handler"], "blubash")  # starting the setup picks BluBash
@@ -167,6 +167,10 @@ class RepliesTest(unittest.TestCase):
         self.assertEqual(brief["brief"]["company"], "Acme")
         self.assertIn("limits", brief["missing"])
         self.assertIn("win_condition", brief["missing"])
+        self.assertIn("agent_name", brief["missing"])
+        done = self.cli("blubash", "done", "brief")  # short answer, not the whole status
+        self.assertEqual(set(done), {"ok", "action", "stage", "progress", "ready", "next"})
+        self.assertEqual(done["next"]["id"], "account")
         self.cli("blubash", "brief", "nao_existe=1", expect=2)
 
     def test_reset_restarts_the_setup(self):

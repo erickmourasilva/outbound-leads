@@ -2,17 +2,23 @@
 
 Quem responde a uma DM de prospecção **não pediu para ser atendido**. O agente certo é curioso, leve e útil: responde primeiro, pergunta depois e só passa para uma pessoa quando há interesse. Esta é a configuração recomendada.
 
-## As 7 perguntas (faça todas numa única mensagem)
+## As perguntas (faça todas numa única mensagem, ANTES de abrir o navegador)
 
-1. **Empresa e segmento:** o nome, o que faz e para quem?
-2. **Oferta:** em uma frase, o que você vende e qual o principal diferencial?
-3. **Atendimento humano:** quem assume a conversa (nome da equipe) e em que horário?
-4. **Tom:** formal, normal ou descontraído? Como a marca fala?
-5. **Limites:** o que o agente **não pode** dizer ou prometer (preço, prazo, desconto, garantia, clientes citados)?
-6. **Ganho e perda:** o que conta como **ganho** (ex.: reunião agendada, proposta aceita, venda fechada) e em que casos o negócio deve ser **dado como perdido** (ex.: fora do perfil, sem interesse, já tem solução)?
-7. **Conhecimento:** site, ou 5 a 10 perguntas e objeções que você mais ouve, para o treinamento.
+Cada resposta vira um campo do `brief`. Pergunte tudo de uma vez e grave com `python3 -m outbound blubash brief chave="valor" ...`.
 
-Grave com `python3 -m outbound blubash brief company="..." segment="..." offer="..." handoff_team="..." hours="..." tone="..." limits="..." win_condition="..." faq="..." instagram_handle="..."`.
+| # | Pergunta | Campo(s) |
+|---|---|---|
+| 1 | **Empresa e segmento:** o nome, o que faz e para quem? | `company`, `segment` |
+| 2 | **Oferta:** em uma frase, o que você vende e qual o principal diferencial? | `offer` |
+| 3 | **Atendimento humano:** quem assume a conversa (nome da equipe) e em que horário? | `handoff_team`, `hours` |
+| 4 | **Tom:** formal, normal ou descontraído? Como a marca fala? | `tone` |
+| 5 | **Limites:** o que o agente **não pode** dizer ou prometer (preço, prazo, desconto, garantia, clientes citados)? | `limits` |
+| 6 | **Ganho e perda:** o que conta como **ganho** (ex.: reunião agendada, proposta aceita, venda fechada) e em que casos o negócio deve ser **dado como perdido** (ex.: fora do perfil, sem interesse, já tem solução)? | `win_condition` |
+| 7 | **Conhecimento:** o site, ou 5 a 10 perguntas e objeções que você mais ouve, para o treinamento. | `faq` |
+| 8 | **Instagram:** qual é o @ da conta profissional que envia as DMs? (é a que será conectada) | `instagram_handle` |
+| 9 | **Nome do agente:** um nome humano e curto para ele (sugira 2 ou 3). | `agent_name` |
+
+O nome da empresa (pergunta 1) também é o nome do workspace.
 
 ## Configuração
 

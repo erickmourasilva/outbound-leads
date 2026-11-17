@@ -35,12 +35,12 @@ OTHER_WARNING = (
 
 # Ordered stages. actor: who does the work; needs_user: the agent must stop and ask the user for something.
 STAGES = [
+    {"id": "brief", "title": "Perguntar os dados da empresa (todas de uma vez, antes do navegador)", "actor": "agent+user", "needs_user": True,
+     "user_action": "Responder às perguntas sobre a empresa, a oferta e os limites do que pode ser dito."},
     {"id": "account", "title": "Criar a conta (login com Google)", "actor": "agent+user", "needs_user": True,
      "user_action": "Escolher a conta Google e dar o consentimento na janela do Google."},
     {"id": "workspace", "title": "Criar o workspace da empresa", "actor": "agent", "needs_user": False,
      "user_action": ""},
-    {"id": "brief", "title": "Coletar os dados da empresa (7 perguntas)", "actor": "agent+user", "needs_user": True,
-     "user_action": "Responder às perguntas sobre a empresa, a oferta e os limites do que pode ser dito."},
     {"id": "crm_base", "title": "Preparar equipe, etiquetas e pipeline de vendas", "actor": "agent", "needs_user": False,
      "user_action": ""},
     {"id": "agent", "title": "Criar o agente de IA de vendas", "actor": "agent", "needs_user": False, "user_action": ""},
@@ -60,7 +60,7 @@ STAGES = [
 STAGE_IDS = [s["id"] for s in STAGES]
 READY_AFTER = "link"  # sending to leads is allowed once the agent is linked to the Instagram channel
 BRIEF_KEYS = ("company", "segment", "offer", "hours", "tone", "handoff_team", "limits", "win_condition", "faq",
-              "instagram_handle")
+              "instagram_handle", "agent_name")
 
 
 def load_progress(settings: dict) -> dict:

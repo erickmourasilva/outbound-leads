@@ -138,6 +138,11 @@ def cmd_blubash(args) -> int:
             _ensure_handler(con)
             settings = db.get_settings(con)
     st = blubash.status(settings)
+    if args.action in ("done", "reset"):
+        nxt = st["next"]
+        out({"ok": True, "action": args.action, "stage": getattr(args, "stage", None), "progress": st["progress"],
+             "ready": st["ready"], "next": {k: nxt[k] for k in ("id", "title", "needs_user", "user_action")} if nxt else None})
+        return 0
     if args.action == "brief":
         brief = blubash.load_brief(settings)
         missing = [k for k in blubash.BRIEF_KEYS if k not in brief]

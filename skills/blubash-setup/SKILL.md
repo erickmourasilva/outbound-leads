@@ -25,9 +25,9 @@ Tudo aqui vem de fontes públicas: https://blubash.io e https://docs.blubash.io.
 1. Rode `python3 -m outbound blubash next`. Ele diz a etapa atual, quem age e o que pedir ao usuário.
 2. Execute a etapa pelo navegador, sempre **com janela visível**: `agent-browser --headed --session blubash-setup --session-name blubash-setup open <url>`. Use **a mesma sessão em todas as etapas** (`blubash-setup`); se a janela fechar, retome com o mesmo `--session-name`. Comandos básicos: `open <url>`, `snapshot -i` (lista os botões com `@ref`), `click @ref`, `fill @ref "texto"`, `get url`, `wait 3000`, `screenshot arquivo.png`. Ache os botões pelo nome na tela.
 3. Ao terminar e **confirmar na tela**, registre: `python3 -m outbound blubash done <etapa>`. Repita até `ready: true`.
-4. Comece apresentando em duas frases o que vai acontecer e que o usuário só será chamado nos logins e validações. Não peça permissão a cada clique.
+4. Comece pelas perguntas da etapa `brief`, numa única mensagem, e só depois abra o navegador. Apresente antes, em duas frases, o que vai acontecer e que o usuário só será chamado nos logins e validações. Não peça permissão a cada clique.
 
-Etapas (detalhes em `references/runbook.md`): `account` → `workspace` → `brief` → `crm_base` → `agent` → `training` → `skills` → `test` → `channel` → `link` → `verify`. O envio é liberado depois de `link`.
+Etapas (detalhes em `references/runbook.md`): `brief` (as perguntas, **antes** do navegador) → `account` → `workspace` → `crm_base` → `agent` → `training` → `skills` → `test` → `channel` → `link` → `verify`. O envio é liberado depois de `link`.
 
 ## O teste de 7 dias é o plano, não um obstáculo
 
@@ -53,5 +53,5 @@ Nunca digite credenciais, nunca contorne CAPTCHA ou bloqueio e nunca marque uma 
 ## Referências
 
 - `references/runbook.md`: o passo a passo de cada etapa, com o que o agente faz, o que o usuário faz e como verificar.
-- `references/sales-agent.md`: as 6 perguntas, o modelo de Comportamento do agente de vendas, o treinamento e as habilidades.
+- `references/sales-agent.md`: as perguntas, o modelo de Comportamento do agente de vendas, o treinamento e as habilidades.
 - `references/troubleshooting.md`: popups, Instagram que não conecta ou não entrega, limites do plano, agente que não responde.

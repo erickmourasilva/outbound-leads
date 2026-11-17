@@ -4,7 +4,12 @@ App e cadastro: pegue os endereços em `python3 -m outbound blubash status` (cam
 
 Para cada etapa: **Agente** é o que você faz, **Usuário** é o que só ele faz, **Verificar** é a prova na tela antes de rodar `python3 -m outbound blubash done <etapa>`. Os nomes de botões vêm da interface em português; se mudarem, use o que o `snapshot` mostrar.
 
-## 1. `account`: criar a conta
+## 1. `brief`: dados da empresa (antes do navegador)
+
+- **Agente:** faça, **numa única mensagem**, as perguntas de `sales-agent.md` (9 itens, incluindo o @ do Instagram e o nome do agente) e grave as respostas: `python3 -m outbound blubash brief company="..." offer="..." ...`.
+- **Verificar:** `python3 -m outbound blubash brief` sem itens em `missing` (o `faq` pode ser o site).
+
+## 2. `account`: criar a conta
 
 - **Agente:** abra o endereço `signup` do `blubash status` (se já houver login, o app abre direto: verifique e pule). Clique em **Cadastrar com Google**.
 - **Usuário:** escolher a conta Google e autorizar na janela do Google. Peça: "Preciso de você: escolha sua conta Google e autorize. Me avise quando o app abrir."
@@ -13,16 +18,12 @@ Para cada etapa: **Agente** é o que você faz, **Usuário** é o que só ele fa
 - Depois do consentimento, aguarde o retorno (`wait 3000`) antes de ler a tela com `snapshot -i`: logo após o redirecionamento a página ainda está carregando.
 - **Verificar:** o app mostra a **navegação lateral** (Dashboard, Conversas...) ou o assistente inicial de criação do workspace. Se continuar na tela do Google ou de login, a etapa não terminou.
 - Alternativa só se o usuário preferir: formulário com nome, e-mail e senha. Quem digita senha e confirma o e-mail é o usuário.
+- Confirme também que o login deu certo citando o nome ou o e-mail do usuário, se aparecerem no menu do perfil: a navegação lateral sozinha não prova isso.
 
-## 2. `workspace`: criar o workspace
+## 3. `workspace`: criar o workspace
 
-- **Agente:** se o app pedir para criar ou escolher um workspace, escolha **criar um novo** e use o nome da empresa (se ainda não tiver, pergunte só o nome da empresa). Confirme.
-- **Verificar:** o Dashboard abre com o nome do workspace. A faixa de **teste de 7 dias** é esperada: ignore ou feche e siga. Não clique em ativar assinatura.
-
-## 3. `brief`: dados da empresa
-
-- **Agente:** faça as 7 perguntas de `sales-agent.md`, uma mensagem só, e grave cada resposta: `python3 -m outbound blubash brief company="..." offer="..." ...`.
-- **Verificar:** `python3 -m outbound blubash brief` sem itens em `missing` (o `faq` pode ser o site).
+- **Agente:** se o app abrir direto num Dashboard ou numa lista de workspaces já existentes (conta que já foi usada), **crie um novo** pelo seletor de workspaces, e não use um existente, a menos que o usuário peça. Na tela **Criar Workspace** preencha só **Nome** (obrigatório: o nome da empresa do `brief`) e **Descrição** (a oferta em uma frase). A **URL do Logo** é opcional: deixe em branco. Confirme em **Criar**.
+- **Verificar:** o Dashboard abre com o nome do novo workspace. A faixa de **teste de 7 dias** é esperada: ignore ou feche e siga. Não clique em ativar assinatura.
 
 ## 4. `crm_base`: equipe, etiquetas e pipeline
 
@@ -39,7 +40,7 @@ Documentação: `pt-BR/pipelines/create-pipeline`, `pt-BR/account-settings/creat
 Documentação: `pt-BR/ai-agents/create-ai-agent`. É preciso ser **Administrador**.
 
 - **Agente:** menu **Agentes de IA** → **Criar Agente**.
-  - **Perfil:** Nome do Agente (um nome humano e curto, definido com o usuário), **Propósito: Vendas** (use *Geração de Leads* só se o usuário não vender nada direto), **Tom: Normal** (ou o do `brief`), **Comportamento** = o modelo de `sales-agent.md` já preenchido (até 5.000 caracteres).
+  - **Perfil:** Nome do Agente (o `agent_name` do `brief`), **Propósito: Vendas** (use *Geração de Leads* só se o usuário não vender nada direto), **Tom: Normal** (ou o do `brief`), **Comportamento** = o modelo de `sales-agent.md` já preenchido (até 5.000 caracteres).
   - **Empresa:** nome e descrição (oferta em poucas linhas, serviços e horário de atendimento).
   - **Revisão:** confira e clique em **Criar**.
 - **Verificar:** aviso de sucesso e a página do agente aberta. Se o limite de agentes do plano for atingido, pare e chame o usuário.
